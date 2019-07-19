@@ -16,7 +16,7 @@ class MainPresenterImpl : MainPresenter {
     }
 
     override fun onOpenChipsClicked() {
-
+        view?.openChips()
     }
 
     override fun detach() {

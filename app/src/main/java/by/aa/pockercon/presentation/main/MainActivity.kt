@@ -1,10 +1,12 @@
 package by.aa.pockercon.presentation.main
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import by.aa.pockercon.R
+import by.aa.pockercon.presentation.chips.ChipsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainView {
@@ -17,27 +19,6 @@ class MainActivity : AppCompatActivity(), MainView {
 
         initViews()
         setupPresenter()
-    }
-
-    override fun onDestroy() {
-        if (isChangingConfigurations) {
-            presenter.detach()
-        } else {
-            presenter.destroy()
-        }
-        super.onDestroy()
-    }
-
-    private fun setupPresenter() {
-        presenter = (lastCustomNonConfigurationInstance as MainPresenter?)?.apply {
-            attach(this@MainActivity)
-        } ?: createPresenter().apply {
-            firstAttach(this@MainActivity)
-        }
-    }
-
-    private fun createPresenter(): MainPresenter {
-        return MainPresenterImpl()
     }
 
     private fun initViews() {
@@ -59,7 +40,32 @@ class MainActivity : AppCompatActivity(), MainView {
         }
     }
 
+    override fun openChips() {
+        startActivity(Intent(this, ChipsActivity::class.java))
+    }
+
+    private fun setupPresenter() {
+        presenter = (lastCustomNonConfigurationInstance as MainPresenter?)?.apply {
+            attach(this@MainActivity)
+        } ?: createPresenter().apply {
+            firstAttach(this@MainActivity)
+        }
+    }
+
+    private fun createPresenter(): MainPresenter {
+        return MainPresenterImpl()
+    }
+
     override fun onRetainCustomNonConfigurationInstance(): Any {
         return presenter
+    }
+
+    override fun onDestroy() {
+        if (isChangingConfigurations) {
+            presenter.detach()
+        } else {
+            presenter.destroy()
+        }
+        super.onDestroy()
     }
 }
