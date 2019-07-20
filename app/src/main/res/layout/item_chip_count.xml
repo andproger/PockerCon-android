@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:clickToClose="true">
+
+    <FrameLayout
+        android:id="@+id/containerDelete"
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/holo_red_light">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_delete_white" />
+
+    </FrameLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/imageViewChip"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chip_white" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textViewChipNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewChip"
+            app:layout_constraintEnd_toEndOf="@id/imageViewChip"
+            app:layout_constraintStart_toStartOf="@id/imageViewChip"
+            app:layout_constraintTop_toTopOf="@id/imageViewChip" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editTextCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewChip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageViewChip"
+            app:layout_constraintTop_toTopOf="@id/imageViewChip" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</com.daimajia.swipe.SwipeLayout>
