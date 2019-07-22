@@ -1,12 +1,13 @@
 package by.aa.pockercon.presentation.main
 
 import by.aa.pockercon.presentation.base.BaseMvpPresenter
+import java.io.Serializable
 
 
 class MainPresenterImpl : BaseMvpPresenter<MainView>(), MainPresenter {
 
-    override fun firstAttach(view: MainView) {
-        super.firstAttach(view)
+    override fun firstAttach(view: MainView, retainedState: Serializable?) {
+        super.firstAttach(view, retainedState)
         view.renderAll()
     }
 

@@ -3,6 +3,7 @@ package by.aa.pockercon.presentation.base
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import java.io.Serializable
 
 abstract class BaseMvpActivity<V : MvpView, P : MvpPresenter<V>> : AppCompatActivity() {
 
@@ -24,17 +25,17 @@ abstract class BaseMvpActivity<V : MvpView, P : MvpPresenter<V>> : AppCompatActi
         view = getView(mvpView!!)
 
         initViews()
-        setupPresenter()
+        setupPresenter(savedInstanceState?.getSerializable(RETAIN_STATE))
     }
 
     abstract fun initViews()
 
-    private fun setupPresenter() {
+    private fun setupPresenter(retainedState: Serializable?) {
         view?.let { view ->
             presenter = (lastCustomNonConfigurationInstance as? P)?.apply {
                 attach(view)
             } ?: createPresenter().apply {
-                firstAttach(view)
+                firstAttach(view, retainedState)
             }
         }
     }
@@ -55,7 +56,20 @@ abstract class BaseMvpActivity<V : MvpView, P : MvpPresenter<V>> : AppCompatActi
         super.onDestroy()
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        if (!isChangingConfigurations) {
+            presenter.getRetainable()?.let { state ->
+                outState?.putSerializable(RETAIN_STATE, state)
+            }
+        }
+        super.onSaveInstanceState(outState)
+    }
+
     abstract fun createPresenter(): P
 
     abstract fun getView(mvpView: MvpView): V
+
+    companion object {
+        const val RETAIN_STATE = "retain_state"
+    }
 }

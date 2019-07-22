@@ -1,5 +1,7 @@
 package by.aa.pockercon.presentation.base
 
+import java.io.Serializable
+
 abstract class BaseMvpPresenter<V : MvpView> : MvpPresenter<V> {
 
     protected var view: V? = null
@@ -8,7 +10,7 @@ abstract class BaseMvpPresenter<V : MvpView> : MvpPresenter<V> {
         this.view = view
     }
 
-    override fun firstAttach(view: V) {
+    override fun firstAttach(view: V, retainedState: Serializable?) {
         this.view = view
     }
 
@@ -19,4 +21,6 @@ abstract class BaseMvpPresenter<V : MvpView> : MvpPresenter<V> {
     override fun destroy() {
         view = null
     }
+
+    override fun getRetainable(): Serializable? = null
 }

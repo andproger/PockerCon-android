@@ -1,11 +1,12 @@
 package by.aa.pockercon.presentation.chips
 
 import by.aa.pockercon.presentation.base.BaseMvpPresenter
+import java.io.Serializable
 
 class ChipsPresenterImpl : BaseMvpPresenter<ChipsView>(), ChipsPresenter {
 
-    override fun firstAttach(view: ChipsView) {
-        super.firstAttach(view)
+    override fun firstAttach(view: ChipsView, retainedState: Serializable?) {
+        super.firstAttach(view, retainedState)
         view.renderAll()
     }
 
@@ -15,6 +16,10 @@ class ChipsPresenterImpl : BaseMvpPresenter<ChipsView>(), ChipsPresenter {
     }
 
     private fun ChipsView.renderAll() {
+        //renderItems(emptyList())
+    }
 
+    override fun getRetainable(): Serializable? {
+        return "123test"
     }
 }

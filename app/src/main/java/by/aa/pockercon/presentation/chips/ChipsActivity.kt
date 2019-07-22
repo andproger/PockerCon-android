@@ -20,7 +20,7 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
     override fun getView(mvpView: MvpView): ChipsView {
         return object : MvpView by mvpView, ChipsView {
             override fun renderItems(items: List<ChipViewState>) {
-
+                adapter.update(items)
             }
         }
     }
@@ -35,16 +35,6 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.setHasFixedSize(false)
         recyclerView.adapter = ChipsAdatpter(this, {})
-
-        adapter.update(
-            listOf(
-                ChipViewState(1, 5, 48),
-                ChipViewState(2, 10, 38),
-                ChipViewState(3, 20, 35),
-                ChipViewState(4, 25, 40),
-                ChipViewState(5, 50, 42)
-            )
-        )
     }
 
     private val adapter: ChipsAdatpter
