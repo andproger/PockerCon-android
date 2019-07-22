@@ -1,5 +1,7 @@
 package by.aa.pockercon.presentation.main
 
-interface MainView {
+import by.aa.pockercon.presentation.base.MvpView
+
+interface MainView : MvpView {
     fun openChips()
 }

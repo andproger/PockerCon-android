@@ -1,30 +1,22 @@
 package by.aa.pockercon.presentation.main
 
+import by.aa.pockercon.presentation.base.BaseMvpPresenter
 
-class MainPresenterImpl : MainPresenter {
 
-    private var view: MainView? = null
+class MainPresenterImpl : BaseMvpPresenter<MainView>(), MainPresenter {
 
-    override fun attach(view: MainView) {
-        this.view = view
+    override fun firstAttach(view: MainView) {
+        super.firstAttach(view)
         view.renderAll()
     }
 
-    override fun firstAttach(view: MainView) {
-        this.view = view
+    override fun attach(view: MainView) {
+        super.attach(view)
         view.renderAll()
     }
 
     override fun onOpenChipsClicked() {
         view?.openChips()
-    }
-
-    override fun detach() {
-        view = null
-    }
-
-    override fun destroy() {
-        view = null
     }
 
     private fun MainView.renderAll() {

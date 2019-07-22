@@ -1,13 +1,8 @@
 package by.aa.pockercon.presentation.main
 
-interface MainPresenter {
-    fun attach(view: MainView)
+import by.aa.pockercon.presentation.base.MvpPresenter
 
-    fun firstAttach(view: MainView)
-
-    fun detach()
-
-    fun destroy()
+interface MainPresenter : MvpPresenter<MainView> {
 
     fun onOpenChipsClicked()
 }

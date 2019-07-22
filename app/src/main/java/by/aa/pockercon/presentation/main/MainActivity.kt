@@ -1,27 +1,27 @@
 package by.aa.pockercon.presentation.main
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import by.aa.pockercon.R
+import by.aa.pockercon.presentation.base.BaseMvpActivity
+import by.aa.pockercon.presentation.base.MvpView
 import by.aa.pockercon.presentation.chips.ChipsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MainView {
+class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
 
-    private lateinit var presenter: MainPresenter
+    override fun contentViewResId() = R.layout.activity_main
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        initViews()
-        setupPresenter()
+    override fun getView(mvpView: MvpView): MainView {
+        return object : MvpView by mvpView, MainView {
+            override fun openChips() {
+                startActivity(Intent(this@MainActivity, ChipsActivity::class.java))
+            }
+        }
     }
 
-    private fun initViews() {
+    override fun initViews() {
         setSupportActionBar(toolbar)
     }
 
@@ -40,32 +40,5 @@ class MainActivity : AppCompatActivity(), MainView {
         }
     }
 
-    override fun openChips() {
-        startActivity(Intent(this, ChipsActivity::class.java))
-    }
-
-    private fun setupPresenter() {
-        presenter = (lastCustomNonConfigurationInstance as MainPresenter?)?.apply {
-            attach(this@MainActivity)
-        } ?: createPresenter().apply {
-            firstAttach(this@MainActivity)
-        }
-    }
-
-    private fun createPresenter(): MainPresenter {
-        return MainPresenterImpl()
-    }
-
-    override fun onRetainCustomNonConfigurationInstance(): Any {
-        return presenter
-    }
-
-    override fun onDestroy() {
-        if (isChangingConfigurations) {
-            presenter.detach()
-        } else {
-            presenter.destroy()
-        }
-        super.onDestroy()
-    }
+    override fun createPresenter() = MainPresenterImpl()
 }

@@ -1,30 +1,41 @@
 package by.aa.pockercon.presentation.base
 
 import android.os.Bundle
+import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import by.aa.pockercon.R
 
 abstract class BaseMvpActivity<V : MvpView, P : MvpPresenter<V>> : AppCompatActivity() {
 
-    private lateinit var presenter: P
+    protected lateinit var presenter: P
 
-    private lateinit var view: V
+    private var view: V? = null
+
+    private var mvpView: MvpView? = object : MvpView {
+
+    }
+
+    @LayoutRes
+    abstract fun contentViewResId(): Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(contentViewResId())
 
-        view = getMvpView()
+        view = getView(mvpView!!)
 
-        //initViews()
+        initViews()
         setupPresenter()
     }
 
+    abstract fun initViews()
+
     private fun setupPresenter() {
-        presenter = (lastCustomNonConfigurationInstance as P?)?.apply {
-            attach(view)
-        } ?: createPresenter().apply {
-            firstAttach(view)
+        view?.let { view ->
+            presenter = (lastCustomNonConfigurationInstance as? P)?.apply {
+                attach(view)
+            } ?: createPresenter().apply {
+                firstAttach(view)
+            }
         }
     }
 
@@ -38,10 +49,13 @@ abstract class BaseMvpActivity<V : MvpView, P : MvpPresenter<V>> : AppCompatActi
         } else {
             presenter.destroy()
         }
+
+        mvpView = null
+        view = null
         super.onDestroy()
     }
 
     abstract fun createPresenter(): P
 
-    abstract fun getMvpView(): V
+    abstract fun getView(mvpView: MvpView): V
 }
