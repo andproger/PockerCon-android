@@ -46,7 +46,7 @@ class ChipsAdatpter(
         init {
             itemView.containerDelete.setOnClickListener {
                 model?.let { model ->
-                    onDeleteClicked(model.id)
+                    onDeleteClicked(model.number)
                 }
             }
         }

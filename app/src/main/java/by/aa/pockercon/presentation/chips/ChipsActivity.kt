@@ -2,6 +2,9 @@ package by.aa.pockercon.presentation.chips
 
 import android.support.v7.widget.StaggeredGridLayoutManager
 import by.aa.pockercon.R
+import by.aa.pockercon.domain.interactors.chips.AddChipInteractorImpl
+import by.aa.pockercon.domain.interactors.chips.GetChipsInteractorImpl
+import by.aa.pockercon.domain.interactors.chips.UpdateChipQuantityInteractorImpl
 import by.aa.pockercon.presentation.base.BaseMvpActivity
 import by.aa.pockercon.presentation.base.MvpView
 import kotlinx.android.synthetic.main.activity_chips.*
@@ -14,8 +17,6 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         initToolbar()
         initRecyclerView()
     }
-
-    override fun createPresenter() = ChipsPresenterImpl()
 
     override fun getView(mvpView: MvpView): ChipsView {
         return object : MvpView by mvpView, ChipsView {
@@ -39,4 +40,10 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
 
     private val adapter: ChipsAdatpter
         get() = recyclerView.adapter as ChipsAdatpter
+
+    override fun createPresenter() = ChipsPresenterImpl(
+        addChipInteractor = AddChipInteractorImpl(),
+        updateChipQuantityInteractor = UpdateChipQuantityInteractorImpl(),
+        getChipsInteractor = GetChipsInteractorImpl()
+    )
 }
