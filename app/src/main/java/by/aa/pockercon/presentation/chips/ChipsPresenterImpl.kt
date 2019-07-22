@@ -34,9 +34,5 @@ class ChipsPresenterImpl(
         renderItems(items)
     }
 
-    override fun getRetainable(): Serializable? {
-        return "123test"
-    }
-
     private fun Chip.toViewState() = ChipViewState(number, quantity)
 }
