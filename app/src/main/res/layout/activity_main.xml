@@ -13,13 +13,48 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Conversion" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/imageViewPlus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@id/textViewPersonCount"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:srcCompat="@drawable/ic_plus_white" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/imageViewMinus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@id/imageViewPerson"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:srcCompat="@drawable/ic_minus_white" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/textViewPersonCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/imageViewPerson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/textViewPersonCount"
+        app:layout_constraintEnd_toStartOf="@id/textViewPersonCount"
+        app:layout_constraintTop_toTopOf="@id/textViewPersonCount"
+        app:srcCompat="@drawable/ic_person_white" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/imageViewPerson" />
 
 </android.support.constraint.ConstraintLayout>
