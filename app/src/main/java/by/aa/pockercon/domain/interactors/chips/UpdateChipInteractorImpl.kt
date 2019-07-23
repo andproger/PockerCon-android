@@ -3,13 +3,11 @@ package by.aa.pockercon.domain.interactors.chips
 import by.aa.pockercon.domain.entity.Chip
 import by.aa.pockercon.domain.gateways.repositories.ChipsRepository
 
-class AddChipInteractorImpl(
+class UpdateChipInteractorImpl(
     private val chipsRepository: ChipsRepository
-) : AddChipInteractor {
+) : UpdateChipInteractor {
 
-    override fun add(newChip: Chip) {
-        if (chipsRepository.getById(newChip.number) == null) {
-            chipsRepository.save(newChip)
-        }
+    override fun update(chipToUpdate: Chip) {
+        chipsRepository.save(chipToUpdate)
     }
 }

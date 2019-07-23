@@ -13,7 +13,7 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
 
     override fun contentViewResId() = R.layout.activity_main
 
-    override fun getView(mvpView: MvpView): MainView {
+    override fun getMvpView(mvpView: MvpView): MainView {
         return object : MvpView by mvpView, MainView {
             override fun openChips() {
                 startActivity(Intent(this@MainActivity, ChipsActivity::class.java))

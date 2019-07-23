@@ -3,13 +3,13 @@ package by.aa.pockercon.presentation.chips
 import by.aa.pockercon.domain.entity.Chip
 import by.aa.pockercon.domain.interactors.chips.AddChipInteractor
 import by.aa.pockercon.domain.interactors.chips.GetChipsInteractor
-import by.aa.pockercon.domain.interactors.chips.UpdateChipQuantityInteractor
+import by.aa.pockercon.domain.interactors.chips.UpdateChipInteractor
 import by.aa.pockercon.presentation.base.BaseMvpPresenter
 import java.io.Serializable
 
 class ChipsPresenterImpl(
     private val addChipInteractor: AddChipInteractor,
-    private val updateChipQuantityInteractor: UpdateChipQuantityInteractor,
+    private val updateChipInteractor: UpdateChipInteractor,
     private val getChipsInteractor: GetChipsInteractor
 ) : BaseMvpPresenter<ChipsView>(), ChipsPresenter {
 
@@ -28,6 +28,10 @@ class ChipsPresenterImpl(
         super.attach(view)
 
         view.renderAll()
+    }
+
+    override fun onDeleteItemClicked(number: Int) {
+
     }
 
     private fun ChipsView.renderAll() {

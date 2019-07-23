@@ -3,13 +3,12 @@ package by.aa.pockercon.domain.interactors.chips
 import by.aa.pockercon.domain.entity.Chip
 import by.aa.pockercon.domain.gateways.repositories.ChipsRepository
 
-class AddChipInteractorImpl(
+class GetChipsInteractorImpl(
     private val chipsRepository: ChipsRepository
-) : AddChipInteractor {
+) : GetChipsInteractor {
 
-    override fun add(newChip: Chip) {
-        if (chipsRepository.getById(newChip.number) == null) {
-            chipsRepository.save(newChip)
-        }
+    override fun getAll(): List<Chip> {
+        return chipsRepository.getAll()
+            .sortedBy { it.number }
     }
 }

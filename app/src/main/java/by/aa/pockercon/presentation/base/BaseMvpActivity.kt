@@ -22,7 +22,7 @@ abstract class BaseMvpActivity<V : MvpView, P : MvpPresenter<V>> : AppCompatActi
         super.onCreate(savedInstanceState)
         setContentView(contentViewResId())
 
-        view = getView(mvpView!!)
+        view = getMvpView(mvpView!!)
 
         initViews()
         setupPresenter(savedInstanceState?.getSerializable(RETAIN_STATE))
@@ -67,7 +67,7 @@ abstract class BaseMvpActivity<V : MvpView, P : MvpPresenter<V>> : AppCompatActi
 
     abstract fun createPresenter(): P
 
-    abstract fun getView(mvpView: MvpView): V
+    abstract fun getMvpView(mvpView: MvpView): V
 
     companion object {
         const val RETAIN_STATE = "retain_state"
