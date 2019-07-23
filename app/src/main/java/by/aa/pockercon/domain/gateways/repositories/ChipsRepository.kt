@@ -8,4 +8,6 @@ interface ChipsRepository {
     fun getAll(): List<Chip>
 
     fun getById(number: Int): Chip?
+
+    fun deleteById(number: Int)
 }

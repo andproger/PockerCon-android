@@ -23,4 +23,8 @@ class ChipsRepositoryImpl: ChipsRepository {
         //TODO
         return null
     }
+
+    override fun deleteById(number: Int) {
+        //TODO
+    }
 }

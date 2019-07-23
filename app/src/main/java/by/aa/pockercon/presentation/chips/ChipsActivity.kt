@@ -5,6 +5,7 @@ import by.aa.pockercon.R
 import by.aa.pockercon.data.cache.repositories.ChipsRepositoryImpl
 import by.aa.pockercon.domain.interactors.chips.AddChipInteractorImpl
 import by.aa.pockercon.domain.interactors.chips.GetChipsInteractorImpl
+import by.aa.pockercon.domain.interactors.chips.RemoveChipInteractorImpl
 import by.aa.pockercon.domain.interactors.chips.UpdateChipInteractorImpl
 import by.aa.pockercon.presentation.base.BaseMvpActivity
 import by.aa.pockercon.presentation.base.MvpView
@@ -50,7 +51,8 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         return ChipsPresenterImpl(
             addChipInteractor = AddChipInteractorImpl(chipRepository),
             updateChipInteractor = UpdateChipInteractorImpl(chipRepository),
-            getChipsInteractor = GetChipsInteractorImpl(chipRepository)
+            getChipsInteractor = GetChipsInteractorImpl(chipRepository),
+            removeChipInteractor = RemoveChipInteractorImpl(chipRepository)
         )
     }
 }
