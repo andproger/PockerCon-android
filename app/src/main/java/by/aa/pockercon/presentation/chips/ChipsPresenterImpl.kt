@@ -32,6 +32,10 @@ class ChipsPresenterImpl(
         view.renderAll()
     }
 
+    override fun onAddClicked() {
+        view?.openAddDialog()
+    }
+
     override fun onDeleteItemClicked(number: Int) {
         removeChipInteractor.remove(number)
     }

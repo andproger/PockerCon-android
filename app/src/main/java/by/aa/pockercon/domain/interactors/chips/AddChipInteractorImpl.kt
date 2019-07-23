@@ -7,9 +7,12 @@ class AddChipInteractorImpl(
     private val chipsRepository: ChipsRepository
 ) : AddChipInteractor {
 
-    override fun add(newChip: Chip) {
-        if (chipsRepository.getById(newChip.number) == null) {
+    override fun add(newChip: Chip): AddResult {
+        return if (chipsRepository.getById(newChip.number) != null) {
+            AddResult.ALREADY_EXIST
+        } else {
             chipsRepository.save(newChip)
+            AddResult.SUCCESS_ADDED
         }
     }
 }

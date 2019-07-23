@@ -9,6 +9,7 @@ import by.aa.pockercon.domain.interactors.chips.RemoveChipInteractorImpl
 import by.aa.pockercon.domain.interactors.chips.UpdateChipInteractorImpl
 import by.aa.pockercon.presentation.base.BaseMvpActivity
 import by.aa.pockercon.presentation.base.MvpView
+import by.aa.pockercon.presentation.chips.add.AddChipDialog
 import kotlinx.android.synthetic.main.activity_chips.*
 
 class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
@@ -18,12 +19,18 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
     override fun initViews() {
         initToolbar()
         initRecyclerView()
+
+        fabAdd.setOnClickListener { presenter.onAddClicked() }
     }
 
     override fun getMvpView(mvpView: MvpView): ChipsView {
         return object : MvpView by mvpView, ChipsView {
             override fun renderItems(items: List<ChipViewState>) {
                 adapter.update(items)
+            }
+
+            override fun openAddDialog() {
+                AddChipDialog(this@ChipsActivity).show()
             }
         }
     }
@@ -49,10 +56,10 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         val chipRepository = ChipsRepositoryImpl()
 
         return ChipsPresenterImpl(
-            addChipInteractor = AddChipInteractorImpl(chipRepository),
-            updateChipInteractor = UpdateChipInteractorImpl(chipRepository),
-            getChipsInteractor = GetChipsInteractorImpl(chipRepository),
-            removeChipInteractor = RemoveChipInteractorImpl(chipRepository)
+                addChipInteractor = AddChipInteractorImpl(chipRepository),
+                updateChipInteractor = UpdateChipInteractorImpl(chipRepository),
+                getChipsInteractor = GetChipsInteractorImpl(chipRepository),
+                removeChipInteractor = RemoveChipInteractorImpl(chipRepository)
         )
     }
 }
