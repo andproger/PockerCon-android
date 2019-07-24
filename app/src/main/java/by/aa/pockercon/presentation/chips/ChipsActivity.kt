@@ -29,8 +29,8 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
                 adapter.update(items)
             }
 
-            override fun openAddDialog() {
-                AddChipDialog(this@ChipsActivity).show()
+            override fun openAddDialog(chip: ChipViewState?) {
+                AddChipDialog(this@ChipsActivity, chip).show()
             }
         }
     }
@@ -44,22 +44,28 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
     private fun initRecyclerView() {
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.setHasFixedSize(false)
-        recyclerView.adapter = ChipsAdatpter(this, onDeleteClicked = { number ->
-            presenter.onDeleteItemClicked(number)
-        })
+        recyclerView.adapter = ChipsAdapter(
+            this,
+            onDeleteClicked = { number ->
+                presenter.onDeleteItemClicked(number)
+            },
+            onItemClicked = { number ->
+                presenter.onItemClicked(number)
+            }
+        )
     }
 
-    private val adapter: ChipsAdatpter
-        get() = recyclerView.adapter as ChipsAdatpter
+    private val adapter: ChipsAdapter
+        get() = recyclerView.adapter as ChipsAdapter
 
     override fun createPresenter(): ChipsPresenter {
         val chipRepository = ChipsRepositoryImpl()
 
         return ChipsPresenterImpl(
-                addChipInteractor = AddChipInteractorImpl(chipRepository),
-                updateChipInteractor = UpdateChipInteractorImpl(chipRepository),
-                getChipsInteractor = GetChipsInteractorImpl(chipRepository),
-                removeChipInteractor = RemoveChipInteractorImpl(chipRepository)
+            addChipInteractor = AddChipInteractorImpl(chipRepository),
+            updateChipInteractor = UpdateChipInteractorImpl(chipRepository),
+            getChipsInteractor = GetChipsInteractorImpl(chipRepository),
+            removeChipInteractor = RemoveChipInteractorImpl(chipRepository)
         )
     }
 }

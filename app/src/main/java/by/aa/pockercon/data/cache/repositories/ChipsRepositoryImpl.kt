@@ -2,8 +2,9 @@ package by.aa.pockercon.data.cache.repositories
 
 import by.aa.pockercon.domain.entity.Chip
 import by.aa.pockercon.domain.gateways.repositories.ChipsRepository
+import io.reactivex.Observable
 
-class ChipsRepositoryImpl: ChipsRepository {
+class ChipsRepositoryImpl : ChipsRepository {
     override fun save(chip: Chip) {
         //TODO
     }
@@ -17,6 +18,18 @@ class ChipsRepositoryImpl: ChipsRepository {
             Chip(50, 10),
             Chip(25, 9)
         )
+    }
+
+    override fun getAllWithUpdates(): Observable<List<Chip>> {
+        return Observable.fromCallable {
+            listOf(
+                Chip(20, 13),
+                Chip(10, 12),
+                Chip(5, 11),
+                Chip(50, 10),
+                Chip(25, 9)
+            )
+        }
     }
 
     override fun getById(number: Int): Chip? {

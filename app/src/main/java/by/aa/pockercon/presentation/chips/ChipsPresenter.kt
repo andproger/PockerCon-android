@@ -6,4 +6,6 @@ interface ChipsPresenter : MvpPresenter<ChipsView> {
     fun onDeleteItemClicked(number: Int)
 
     fun onAddClicked()
+
+    fun onItemClicked(number: Int)
 }

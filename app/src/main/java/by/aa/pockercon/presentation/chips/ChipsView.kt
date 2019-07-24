@@ -5,5 +5,5 @@ import by.aa.pockercon.presentation.base.MvpView
 interface ChipsView : MvpView {
     fun renderItems(items: List<ChipViewState>)
 
-    fun openAddDialog()
+    fun openAddDialog(chip: ChipViewState? = null)
 }

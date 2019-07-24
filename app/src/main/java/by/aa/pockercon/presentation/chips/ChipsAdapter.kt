@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import by.aa.pockercon.R
 import kotlinx.android.synthetic.main.item_chip_count.view.*
 
-class ChipsAdatpter(
-        context: Context,
-        private val onDeleteClicked: (Int) -> Unit
-) : RecyclerView.Adapter<ChipsAdatpter.RowViewHolder>() {
+class ChipsAdapter(
+    context: Context,
+    private val onDeleteClicked: (Int) -> Unit,
+    private val onItemClicked: (Int) -> Unit
+) : RecyclerView.Adapter<ChipsAdapter.RowViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
 
@@ -19,7 +20,7 @@ class ChipsAdatpter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowViewHolder {
         val itemView = inflater.inflate(R.layout.item_chip_count, parent, false)
-        return RowViewHolder(itemView, onDeleteClicked)
+        return RowViewHolder(itemView, onDeleteClicked, onItemClicked)
     }
 
     override fun getItemCount(): Int {
@@ -37,13 +38,20 @@ class ChipsAdatpter(
     }
 
     class RowViewHolder(
-            itemView: View,
-            onDeleteClicked: (Int) -> Unit
+        itemView: View,
+        onDeleteClicked: (Int) -> Unit,
+        onItemClicked: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private var model: ChipViewState? = null
 
         init {
+            itemView.setOnClickListener {
+                model?.let { model ->
+                    onItemClicked(model.number)
+                }
+            }
+
             itemView.containerDelete.setOnClickListener {
                 model?.let { model ->
                     onDeleteClicked(model.number)
@@ -59,7 +67,7 @@ class ChipsAdatpter(
         private fun updateUI() {
             model?.apply {
                 itemView.textViewChipNumber.text = number.toString()
-                itemView.editTextCount.setText(count.toString())
+                itemView.textViewCount.text = count.toString()
             }
         }
     }
