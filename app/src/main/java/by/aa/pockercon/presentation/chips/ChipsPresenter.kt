@@ -8,4 +8,8 @@ interface ChipsPresenter : MvpPresenter<ChipsView> {
     fun onAddClicked()
 
     fun onItemClicked(number: Int)
+
+    fun onEditingComplete(state: ChipViewState)
+
+    fun onEditingCanceled()
 }

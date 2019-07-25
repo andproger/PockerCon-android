@@ -18,9 +18,9 @@ class ChipsPresenterImpl(
     private val removeChipInteractor: RemoveChipInteractor
 ) : BaseMvpPresenter<ChipsView>(), ChipsPresenter {
 
-    private val compositeDisposable = CompositeDisposable()
+    private val editModel = ChipsEditModel.DEFAULT
 
-    private var items: List<ChipViewState> = emptyList()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun firstAttach(view: ChipsView, retainedState: Serializable?) {
         super.firstAttach(view, retainedState)
@@ -34,8 +34,8 @@ class ChipsPresenterImpl(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { chipStates ->
-                items = chipStates
-                view?.renderItems(items)
+                editModel.items = chipStates
+                view?.renderItems(editModel.items)
             }.let { d ->
                 compositeDisposable.add(d)
             }
@@ -48,7 +48,8 @@ class ChipsPresenterImpl(
     }
 
     override fun onAddClicked() {
-        view?.openAddDialog()
+        editModel.dialogState = DialogState.ADD_CHIP
+        view?.openEditDialog()
     }
 
     override fun onDeleteItemClicked(number: Int) {
@@ -56,20 +57,36 @@ class ChipsPresenterImpl(
     }
 
     override fun onItemClicked(number: Int) {
-        items.find { c -> c.number == number }?.let { chip ->
-            view?.openAddDialog(chip)
+        editModel.items.find { c -> c.number == number }?.let { chip ->
+            editModel.dialogState = DialogState.EDIT_CHIP
+            view?.openEditDialog(chip)
         }
     }
 
-    private fun ChipsView.renderAll() {
-        renderItems(items)
+    override fun onEditingComplete(state: ChipViewState) {
+        val chip = Chip(state.number, state.count)
+
+        when (editModel.dialogState) {
+            DialogState.ADD_CHIP -> addChipInteractor.add(chip)
+            DialogState.EDIT_CHIP -> updateChipInteractor.update(chip)
+        }
+
+        editModel.dialogState = null
     }
 
-    private fun Chip.toViewState() = ChipViewState(number, quantity)
+    override fun onEditingCanceled() {
+        editModel.dialogState = null
+    }
+
+    private fun ChipsView.renderAll() {
+        renderItems(editModel.items)
+    }
 
     override fun destroy() {
         compositeDisposable.dispose()
 
         super.destroy()
     }
+
+    private fun Chip.toViewState() = ChipViewState(number, quantity)
 }

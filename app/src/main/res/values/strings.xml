@@ -4,4 +4,6 @@
     <string name="value">Значение</string>
     <string name="count">Колличество</string>
     <string name="x">X</string>
+    <string name="ok">ok</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -29,8 +29,18 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
                 adapter.update(items)
             }
 
-            override fun openAddDialog(chip: ChipViewState?) {
-                AddChipDialog(this@ChipsActivity, chip).show()
+            override fun openEditDialog(state: ChipViewState?) {
+                AddChipDialog(
+                    context = this@ChipsActivity,
+                    chipViewState = state,
+                    onComplete = { newState ->
+                        presenter.onEditingComplete(newState)
+                    }
+                ).apply {
+                    setOnCancelListener {
+                        presenter.onEditingCanceled()
+                    }
+                }.show()
             }
         }
     }

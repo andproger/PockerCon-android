@@ -2,44 +2,71 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewValueLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:text="@string/value"
         app:layout_constraintBottom_toTopOf="@id/editTextValue"
-        app:layout_constraintEnd_toEndOf="@id/editTextValue"
-        app:layout_constraintStart_toStartOf="@id/editTextValue" />
+        app:layout_constraintEnd_toStartOf="@id/textViewCountLabel"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/editTextValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/value"
+        android:inputType="number"
+        android:maxLength="3"
+        android:minEms="2"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/editTextCount"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/textViewValueLabel"
+        app:layout_constraintStart_toStartOf="@id/textViewValueLabel"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewCountLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="@string/count"
         app:layout_constraintBottom_toTopOf="@id/editTextCount"
-        app:layout_constraintEnd_toEndOf="@id/editTextCount"
-        app:layout_constraintStart_toStartOf="@id/editTextCount" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textViewValueLabel" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/editTextCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/count"
+        android:inputType="number"
+        android:maxLength="3"
+        android:minEms="2"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/editTextValue"
+        app:layout_constraintEnd_toEndOf="@id/textViewCountLabel"
+        app:layout_constraintStart_toStartOf="@id/textViewCountLabel"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ok"
+        app:layout_constraintEnd_toEndOf="@id/editTextValue"
+        app:layout_constraintStart_toStartOf="@id/editTextValue"
+        app:layout_constraintTop_toBottomOf="@id/editTextValue" />
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        app:layout_constraintEnd_toEndOf="@id/editTextCount"
+        app:layout_constraintStart_toStartOf="@id/editTextCount"
+        app:layout_constraintTop_toBottomOf="@id/editTextCount" />
 
 </android.support.constraint.ConstraintLayout>
