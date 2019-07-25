@@ -32,6 +32,8 @@ class AddChipDialog(
             val number = editTextValue.text.toString().toIntOrNull() ?: 0
             val count = editTextCount.text.toString().toIntOrNull() ?: 0
 
+            if (number == 0 || count == 0) return@setOnClickListener
+
             onComplete(ChipViewState(number, count))
             cancel()
         }

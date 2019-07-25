@@ -6,4 +6,6 @@ interface ChipsView : MvpView {
     fun renderItems(items: List<ChipViewState>)
 
     fun openEditDialog(state: ChipViewState? = null)
+
+    fun showAllreadyExistWarn()
 }

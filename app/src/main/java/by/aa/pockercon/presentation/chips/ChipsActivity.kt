@@ -1,6 +1,7 @@
 package by.aa.pockercon.presentation.chips
 
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.widget.Toast
 import by.aa.pockercon.R
 import by.aa.pockercon.data.cache.repositories.ChipsRepositoryImpl
 import by.aa.pockercon.domain.interactors.chips.AddChipInteractorImpl
@@ -41,6 +42,10 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
                         presenter.onEditingCanceled()
                     }
                 }.show()
+            }
+
+            override fun showAllreadyExistWarn() {
+                Toast.makeText(this@ChipsActivity, R.string.allready_exist_warning, Toast.LENGTH_SHORT).show()
             }
         }
     }

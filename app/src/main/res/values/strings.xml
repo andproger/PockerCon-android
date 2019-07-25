@@ -1,9 +1,17 @@
 <resources>
     <string name="app_name">PockerCon</string>
+
     <string name="chips">Chips</string>
+
     <string name="value">Значение</string>
+
     <string name="count">Колличество</string>
+
     <string name="x">X</string>
+
     <string name="ok">ok</string>
+
     <string name="cancel">Cancel</string>
+
+    <string name="allready_exist_warning">Уже есть с таким значением</string>
 </resources>
