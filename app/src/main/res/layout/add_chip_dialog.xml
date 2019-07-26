@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/imageViewDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@android:color/darker_gray"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/textViewCountLabel"
+        app:layout_constraintEnd_toEndOf="@id/textViewCountLabel"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_delete_white"
+        tools:visibility="visible" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewValueLabel"
@@ -55,6 +68,7 @@
         android:id="@+id/buttonOk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="@string/ok"
         app:layout_constraintEnd_toEndOf="@id/editTextValue"
         app:layout_constraintStart_toStartOf="@id/editTextValue"
@@ -64,6 +78,7 @@
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="@string/cancel"
         app:layout_constraintEnd_toEndOf="@id/editTextCount"
         app:layout_constraintStart_toStartOf="@id/editTextCount"

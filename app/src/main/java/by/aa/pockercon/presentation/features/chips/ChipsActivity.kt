@@ -33,11 +33,14 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
 
             override fun openEditDialog(state: ChipViewState?) {
                 AddChipDialog(
-                    context = this@ChipsActivity,
-                    chipViewState = state,
-                    onComplete = { newState ->
-                        presenter.onEditingComplete(newState)
-                    }
+                        context = this@ChipsActivity,
+                        chipViewState = state,
+                        onComplete = { newState ->
+                            presenter.onEditingComplete(newState)
+                        },
+                        onDeleteClicked = { number ->
+                            presenter.onDeleteItemClicked(number)
+                        }
                 ).apply {
                     setOnCancelListener {
                         presenter.onEditingCanceled()
@@ -61,13 +64,13 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.setHasFixedSize(false)
         recyclerView.adapter = ChipsAdapter(
-            this,
-            onDeleteClicked = { number ->
-                presenter.onDeleteItemClicked(number)
-            },
-            onItemClicked = { number ->
-                presenter.onItemClicked(number)
-            }
+                this,
+                onDeleteClicked = { number ->
+                    presenter.onDeleteItemClicked(number)
+                },
+                onItemClicked = { number ->
+                    presenter.onItemClicked(number)
+                }
         )
     }
 
@@ -80,10 +83,10 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         val chipRepository = ChipsRepositoryImpl(chipsDao)
 
         return ChipsPresenterImpl(
-            addChipInteractor = AddChipInteractorImpl(chipRepository),
-            updateChipInteractor = UpdateChipInteractorImpl(chipRepository),
-            getChipsInteractor = GetChipsInteractorImpl(chipRepository),
-            removeChipInteractor = RemoveChipInteractorImpl(chipRepository)
+                addChipInteractor = AddChipInteractorImpl(chipRepository),
+                updateChipInteractor = UpdateChipInteractorImpl(chipRepository),
+                getChipsInteractor = GetChipsInteractorImpl(chipRepository),
+                removeChipInteractor = RemoveChipInteractorImpl(chipRepository)
         )
     }
 }

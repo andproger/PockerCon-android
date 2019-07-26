@@ -25,19 +25,6 @@ class ChipsPresenterImpl(
         subscribeToChips()
     }
 
-    private fun subscribeToChips() {
-        getChipsInteractor.getAllWithUpdates()
-            .map { chips -> chips.map { c -> c.toViewState() } }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { chipStates ->
-                editModel.items = chipStates
-                view?.renderItems(editModel.items)
-            }.let { d ->
-                compositeDisposable.add(d)
-            }
-    }
-
     override fun attach(view: ChipsView) {
         super.attach(view)
 
@@ -77,6 +64,19 @@ class ChipsPresenterImpl(
 
     private fun ChipsView.renderAll() {
         renderItems(editModel.items)
+    }
+
+    private fun subscribeToChips() {
+        getChipsInteractor.getAllWithUpdates()
+            .map { chips -> chips.map { c -> c.toViewState() } }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { chipStates ->
+                editModel.items = chipStates
+                view?.renderItems(editModel.items)
+            }.let { d ->
+                compositeDisposable.add(d)
+            }
     }
 
     private fun makeAddSingle(chip: Chip) {
