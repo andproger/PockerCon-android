@@ -23,20 +23,9 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
 
     override fun initViews() {
         setSupportActionBar(toolbar)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_open_chips -> {
-                presenter.onOpenChipsClicked()
-                true
-            }
-            else -> return super.onOptionsItemSelected(item)
+        fabAdd.setOnClickListener {
+            presenter.onOpenChipsClicked()
         }
     }
 
