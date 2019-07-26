@@ -1,9 +1,9 @@
-package by.aa.pockercon.presentation.launch
+package by.aa.pockercon.presentation.features.launch
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import by.aa.pockercon.presentation.main.MainActivity
+import by.aa.pockercon.presentation.features.main.MainActivity
 
 class LaunchActivity : AppCompatActivity() {
 

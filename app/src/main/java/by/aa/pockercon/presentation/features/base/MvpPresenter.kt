@@ -1,4 +1,4 @@
-package by.aa.pockercon.presentation.base
+package by.aa.pockercon.presentation.features.base
 
 import java.io.Serializable
 

@@ -1,6 +1,6 @@
-package by.aa.pockercon.presentation.chips
+package by.aa.pockercon.presentation.features.chips
 
-import by.aa.pockercon.presentation.base.MvpView
+import by.aa.pockercon.presentation.features.base.MvpView
 
 interface ChipsView : MvpView {
     fun renderItems(items: List<ChipViewState>)

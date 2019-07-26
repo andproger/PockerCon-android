@@ -1,12 +1,12 @@
-package by.aa.pockercon.presentation.main
+package by.aa.pockercon.presentation.features.main
 
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import by.aa.pockercon.R
-import by.aa.pockercon.presentation.base.BaseMvpActivity
-import by.aa.pockercon.presentation.base.MvpView
-import by.aa.pockercon.presentation.chips.ChipsActivity
+import by.aa.pockercon.presentation.features.base.BaseMvpActivity
+import by.aa.pockercon.presentation.features.base.MvpView
+import by.aa.pockercon.presentation.features.chips.ChipsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {

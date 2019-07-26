@@ -1,4 +1,4 @@
-package by.aa.pockercon.presentation.chips
+package by.aa.pockercon.presentation.features.chips
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -46,7 +46,7 @@ class ChipsAdapter(
         private var model: ChipViewState? = null
 
         init {
-            itemView.setOnClickListener {
+            itemView.containerContent.setOnClickListener {
                 model?.let { model ->
                     onItemClicked(model.number)
                 }

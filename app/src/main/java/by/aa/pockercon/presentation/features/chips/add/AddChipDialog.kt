@@ -1,10 +1,10 @@
-package by.aa.pockercon.presentation.chips.add
+package by.aa.pockercon.presentation.features.chips.add
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import by.aa.pockercon.R
-import by.aa.pockercon.presentation.chips.ChipViewState
+import by.aa.pockercon.presentation.features.chips.ChipViewState
 import kotlinx.android.synthetic.main.add_chip_dialog.*
 
 class AddChipDialog(

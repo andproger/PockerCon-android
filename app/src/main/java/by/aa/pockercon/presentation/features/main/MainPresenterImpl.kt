@@ -1,6 +1,6 @@
-package by.aa.pockercon.presentation.main
+package by.aa.pockercon.presentation.features.main
 
-import by.aa.pockercon.presentation.base.BaseMvpPresenter
+import by.aa.pockercon.presentation.features.base.BaseMvpPresenter
 import java.io.Serializable
 
 

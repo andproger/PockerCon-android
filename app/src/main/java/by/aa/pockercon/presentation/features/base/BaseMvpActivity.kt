@@ -1,4 +1,4 @@
-package by.aa.pockercon.presentation.base
+package by.aa.pockercon.presentation.features.base
 
 import android.os.Bundle
 import android.support.annotation.LayoutRes

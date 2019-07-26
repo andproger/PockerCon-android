@@ -1,4 +1,4 @@
-package by.aa.pockercon.presentation.chips
+package by.aa.pockercon.presentation.features.chips
 
 class ChipsEditModel(
     var items: List<ChipViewState>,

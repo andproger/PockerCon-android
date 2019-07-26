@@ -1,43 +1,37 @@
 package by.aa.pockercon.data.cache.repositories
 
+import by.aa.pockercon.data.cache.datastores.ChipsDao
+import by.aa.pockercon.data.cache.entity.ChipDataModel
 import by.aa.pockercon.domain.entity.Chip
 import by.aa.pockercon.domain.gateways.repositories.ChipsRepository
 import io.reactivex.Observable
 
-class ChipsRepositoryImpl : ChipsRepository {
+class ChipsRepositoryImpl(
+    private val chipsDao: ChipsDao
+) : ChipsRepository {
     override fun save(chip: Chip) {
-        //TODO
+        chipsDao.insert(chip.toData())
     }
 
     override fun getAll(): List<Chip> {
-        //TODO
-        return listOf(
-            Chip(20, 13),
-            Chip(10, 12),
-            Chip(5, 11),
-            Chip(50, 10),
-            Chip(25, 9)
-        )
+        return chipsDao.getAll().map { it.toCore() }
     }
 
     override fun getAllWithUpdates(): Observable<List<Chip>> {
-        return Observable.fromCallable {
-            listOf(
-                Chip(20, 13),
-                Chip(10, 12),
-                Chip(5, 11),
-                Chip(50, 10),
-                Chip(25, 9)
-            )
-        }
+        return chipsDao.getAllWithUpdates().map { models ->
+            models.map { it.toCore() }
+        }.toObservable()
     }
 
     override fun getById(number: Int): Chip? {
-        //TODO
-        return null
+        return chipsDao.getById(number)?.toCore()
     }
 
     override fun deleteById(number: Int) {
-        //TODO
+        chipsDao.deleteById(number)
     }
+
+    private fun ChipDataModel.toCore() = Chip(number, count)
+
+    private fun Chip.toData() = ChipDataModel(number, quantity)
 }

@@ -1,6 +1,6 @@
-package by.aa.pockercon.presentation.chips
+package by.aa.pockercon.presentation.features.chips
 
-import by.aa.pockercon.presentation.base.MvpPresenter
+import by.aa.pockercon.presentation.features.base.MvpPresenter
 
 interface ChipsPresenter : MvpPresenter<ChipsView> {
     fun onDeleteItemClicked(number: Int)

@@ -1,4 +1,4 @@
-package by.aa.pockercon.presentation.chips
+package by.aa.pockercon.presentation.features.chips
 
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.widget.Toast
@@ -8,9 +8,10 @@ import by.aa.pockercon.domain.interactors.chips.AddChipInteractorImpl
 import by.aa.pockercon.domain.interactors.chips.GetChipsInteractorImpl
 import by.aa.pockercon.domain.interactors.chips.RemoveChipInteractorImpl
 import by.aa.pockercon.domain.interactors.chips.UpdateChipInteractorImpl
-import by.aa.pockercon.presentation.base.BaseMvpActivity
-import by.aa.pockercon.presentation.base.MvpView
-import by.aa.pockercon.presentation.chips.add.AddChipDialog
+import by.aa.pockercon.presentation.app.App
+import by.aa.pockercon.presentation.features.base.BaseMvpActivity
+import by.aa.pockercon.presentation.features.base.MvpView
+import by.aa.pockercon.presentation.features.chips.add.AddChipDialog
 import kotlinx.android.synthetic.main.activity_chips.*
 
 class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
@@ -74,7 +75,9 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         get() = recyclerView.adapter as ChipsAdapter
 
     override fun createPresenter(): ChipsPresenter {
-        val chipRepository = ChipsRepositoryImpl()
+        val chipsDao = (application as App).getProvider().provideRoomDb().getChipsDao()
+
+        val chipRepository = ChipsRepositoryImpl(chipsDao)
 
         return ChipsPresenterImpl(
             addChipInteractor = AddChipInteractorImpl(chipRepository),

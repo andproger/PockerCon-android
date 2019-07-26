@@ -1,4 +1,4 @@
-package by.aa.pockercon.presentation.chips
+package by.aa.pockercon.presentation.features.chips
 
 class ChipViewState(
         val number: Int,
