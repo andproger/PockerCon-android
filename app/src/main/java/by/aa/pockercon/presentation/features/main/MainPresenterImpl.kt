@@ -50,14 +50,19 @@ class MainPresenterImpl(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { calcResult ->
+                val hasOnlyOneSet = calcResult.items.filter { !it.redundant }.size == 1
 
                 val items = calcResult.items.map { resultItem ->
+                    val visible = !(resultItem.redundant || hasOnlyOneSet)
+
                     ResultItemViewState(
                         chipCounts = resultItem.chips.map {
                             ChipCountViewState(it.number, it.quantity)
                         },
-                        personCount = resultItem.personCount,
-                        redundant = resultItem.redundant
+                        personCountState = PersonCountState(
+                            personCount = resultItem.personCount,
+                            visible = visible
+                        )
                     )
                 }
 

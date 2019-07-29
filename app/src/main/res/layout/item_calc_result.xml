@@ -37,6 +37,18 @@
 
     </GridLayout>
 
+    <android.support.constraint.Group
+        android:id="@+id/groupPersonCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:constraint_referenced_ids="
+            textViewX,
+            textViewPersonCount,
+            imageViewPersonCount
+        "
+        tools:visibility="visible" />
+
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageViewPersonCount"
         android:layout_width="wrap_content"
@@ -65,6 +77,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gridLayoutSet" />
-
 
 </android.support.constraint.ConstraintLayout>

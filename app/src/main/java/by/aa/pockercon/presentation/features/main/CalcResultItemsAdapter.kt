@@ -48,7 +48,10 @@ class CalcResultItemsAdapter(
         private fun updateUI() {
             model?.apply {
                 renderChipCounts(chipCounts)
-                itemView.textViewPersonCount.text = personCount.toString()
+                itemView.textViewPersonCount.text = personCountState.personCount.toString()
+
+                itemView.groupPersonCount.visibility =
+                    if (personCountState.visible) View.VISIBLE else View.GONE
             }
         }
 
@@ -72,11 +75,15 @@ class CalcResultItemsAdapter(
 
 class ResultItemViewState(
     val chipCounts: List<ChipCountViewState>,
-    val personCount: Int,
-    val redundant: Boolean
+    val personCountState: PersonCountState
 )
 
 class ChipCountViewState(
     val number: Int,
     val count: Int
+)
+
+class PersonCountState(
+    val personCount: Int,
+    val visible: Boolean
 )
