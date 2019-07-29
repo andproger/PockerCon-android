@@ -1,8 +1,7 @@
 package by.aa.pockercon.presentation.features.main
 
 import android.content.Intent
-import android.view.Menu
-import android.view.MenuItem
+import android.support.v7.widget.LinearLayoutManager
 import by.aa.pockercon.R
 import by.aa.pockercon.data.cache.repositories.ChipsRepositoryImpl
 import by.aa.pockercon.data.cache.repositories.PersonCountRepositoryImpl
@@ -20,8 +19,21 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
 
     override fun getMvpView(mvpView: MvpView): MainView {
         return object : MvpView by mvpView, MainView {
+
             override fun openChips() {
                 startActivity(Intent(this@MainActivity, ChipsActivity::class.java))
+            }
+
+            override fun renderCalcResultItems(items: List<ResultItemViewState>) {
+                adapter.update(items)
+            }
+
+            override fun renderPersonCount(personCount: Int) {
+                textViewPersonCount.text = personCount.toString()
+            }
+
+            override fun renderSummary(summary: Int) {
+                textViewSummary.text = summary.toString()
             }
         }
     }
@@ -29,7 +41,18 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
     override fun initViews() {
         setSupportActionBar(toolbar)
 
-        fabAdd.setOnClickListener { presenter.onOpenChipsClicked() }
+        initListeners()
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setHasFixedSize(false)
+        recyclerView.adapter = CalcResultItemsAdapter(this)
+    }
+
+    private fun initListeners() {
+        fabChips.setOnClickListener { presenter.onOpenChipsClicked() }
 
         imageViewPlus.setOnClickListener { presenter.onPlusPersonClicked() }
 
@@ -43,8 +66,11 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
         val personCountRepository = PersonCountRepositoryImpl()
 
         return MainPresenterImpl(
-            CalculateChipSetsInteractorImpl(chipsRepository, personCountRepository),
-            UpdatePersonCountInteractorImpl(personCountRepository)
+                CalculateChipSetsInteractorImpl(chipsRepository, personCountRepository),
+                UpdatePersonCountInteractorImpl(personCountRepository)
         )
     }
+
+    private val adapter: CalcResultItemsAdapter
+        get() = recyclerView.adapter as CalcResultItemsAdapter
 }

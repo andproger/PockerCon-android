@@ -22,7 +22,7 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         initToolbar()
         initRecyclerView()
 
-        fabAdd.setOnClickListener { presenter.onAddClicked() }
+        fabChips.setOnClickListener { presenter.onAddClicked() }
     }
 
     override fun getMvpView(mvpView: MvpView): ChipsView {
@@ -64,10 +64,7 @@ class ChipsActivity : BaseMvpActivity<ChipsView, ChipsPresenter>() {
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.setHasFixedSize(false)
         recyclerView.adapter = ChipsAdapter(
-                this,
-                onDeleteClicked = { number ->
-                    presenter.onDeleteItemClicked(number)
-                },
+                context = this,
                 onItemClicked = { number ->
                     presenter.onItemClicked(number)
                 }

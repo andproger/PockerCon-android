@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:padding="16dp">
+
+    <GridLayout
+        android:id="@+id/gridLayoutSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <include
+            layout="@layout/include_item_chip_count"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            layout="@layout/include_item_chip_count"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            layout="@layout/include_item_chip_count"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            layout="@layout/include_item_chip_count"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </GridLayout>
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageViewPersonCount"
@@ -30,7 +62,9 @@
         android:text="2"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gridLayoutSet" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -11,7 +11,7 @@ class CalculateChipSetsInteractorImpl(
         private val personCountRepository: PersonCountRepository
 ) : CalculateChipSetsInteractor {
 
-    override fun calculate(): Observable<CalcSetsResult> {
+    override fun calculate(): Observable<CalcResult> {
         return Observable.combineLatest(
                 chipsRepository.getAllWithUpdates(),
                 personCountRepository.getWithUpdates(),
@@ -22,7 +22,18 @@ class CalculateChipSetsInteractorImpl(
             Observable.fromCallable {
                 val (chips, count) = chipsAndCount
 
-                CalcSetsResult()
+                val sum = chips.sumBy { it.number * it.quantity }
+
+                val items = listOf(
+                        ResultItem(chips, count, false),
+                        ResultItem(listOf(Chip(5, 1)), 0, true)
+                )
+
+                CalcResult(
+                        items,
+                        count,
+                        sum
+                )
             }
         }
     }

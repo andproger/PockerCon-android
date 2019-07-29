@@ -12,8 +12,8 @@ import java.io.Serializable
 
 
 class MainPresenterImpl(
-        private val calculateChipSetsInteractor: CalculateChipSetsInteractor,
-        private val updatePersonCountInteractor: UpdatePersonCountInteractor
+    private val calculateChipSetsInteractor: CalculateChipSetsInteractor,
+    private val updatePersonCountInteractor: UpdatePersonCountInteractor
 ) : BaseMvpPresenter<MainView>(), MainPresenter {
 
     private val personsIncSubject = BehaviorSubject.create<IncOperation>()
@@ -47,13 +47,26 @@ class MainPresenterImpl(
 
     private fun subscribeToCalculation() {
         calculateChipSetsInteractor.calculate()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { calcResult ->
-                    calcResult
-                }.let { d ->
-                    compositeDisposable.add(d)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { calcResult ->
+
+                val items = calcResult.items.map { resultItem ->
+                    ResultItemViewState(
+                        chipCounts = resultItem.chips.map {
+                            ChipCountViewState(it.number, it.quantity)
+                        },
+                        personCount = resultItem.personCount,
+                        redundant = resultItem.redundant
+                    )
                 }
+
+                view?.renderSummary(calcResult.summary)
+                view?.renderPersonCount(calcResult.personCount)
+                view?.renderCalcResultItems(items)
+            }.let { d ->
+                compositeDisposable.add(d)
+            }
     }
 
     private fun subscribeToChangePersonCount() {
@@ -69,11 +82,11 @@ class MainPresenterImpl(
                 }
             }
         }.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-                .let { d ->
-                    compositeDisposable.add(d)
-                }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
+            .let { d ->
+                compositeDisposable.add(d)
+            }
     }
 
     enum class IncOperation {

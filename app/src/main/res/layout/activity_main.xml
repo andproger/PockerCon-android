@@ -18,8 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintStart_toEndOf="@id/textViewPersonCount"
         app:layout_constraintBottom_toBottomOf="@id/imageViewPerson"
+        app:layout_constraintStart_toEndOf="@id/textViewPersonCount"
         app:srcCompat="@drawable/ic_plus_white" />
 
     <android.support.v7.widget.AppCompatImageView
@@ -27,20 +27,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toStartOf="@id/imageViewPerson"
         app:layout_constraintBottom_toBottomOf="@id/imageViewPerson"
+        app:layout_constraintEnd_toStartOf="@id/imageViewPerson"
         app:srcCompat="@drawable/ic_minus_white" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewPersonCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:text="2"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="32dp"/>
+        app:layout_constraintEnd_toStartOf="@id/textViewSummary"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageViewPerson"
@@ -58,14 +58,24 @@
         app:layout_constraintBottom_toTopOf="@id/imageViewPerson"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAdd"
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/textViewSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_chip_white"
+        tools:text="123456"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/fabChips"
+        app:layout_constraintEnd_toStartOf="@id/fabChips"
+        app:layout_constraintTop_toTopOf="@id/fabChips" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabChips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_chip_white"
         app:useCompatPadding="true" />
 
 </android.support.constraint.ConstraintLayout>

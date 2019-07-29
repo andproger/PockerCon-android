@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAdd"
+        android:id="@+id/fabChips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_plus_white"

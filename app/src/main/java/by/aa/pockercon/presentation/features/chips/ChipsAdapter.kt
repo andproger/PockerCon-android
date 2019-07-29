@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import by.aa.pockercon.R
-import kotlinx.android.synthetic.main.item_chip_count.view.*
+import kotlinx.android.synthetic.main.include_item_chip_count.view.*
 
 class ChipsAdapter(
     context: Context,
-    private val onDeleteClicked: (Int) -> Unit,
     private val onItemClicked: (Int) -> Unit
 ) : RecyclerView.Adapter<ChipsAdapter.RowViewHolder>() {
 
@@ -20,7 +19,7 @@ class ChipsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowViewHolder {
         val itemView = inflater.inflate(R.layout.item_chip_count, parent, false)
-        return RowViewHolder(itemView, onDeleteClicked, onItemClicked)
+        return RowViewHolder(itemView, onItemClicked)
     }
 
     override fun getItemCount(): Int {
@@ -39,22 +38,15 @@ class ChipsAdapter(
 
     class RowViewHolder(
         itemView: View,
-        onDeleteClicked: (Int) -> Unit,
         onItemClicked: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private var model: ChipViewState? = null
 
         init {
-            itemView.containerContent.setOnClickListener {
+            itemView.setOnClickListener {
                 model?.let { model ->
                     onItemClicked(model.number)
-                }
-            }
-
-            itemView.containerDelete.setOnClickListener {
-                model?.let { model ->
-                    onDeleteClicked(model.number)
                 }
             }
         }
