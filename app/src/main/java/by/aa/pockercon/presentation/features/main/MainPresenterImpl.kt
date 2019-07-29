@@ -53,7 +53,7 @@ class MainPresenterImpl(
                 val hasOnlyOneSet = calcResult.items.filter { !it.redundant }.size == 1
 
                 val items = calcResult.items.map { resultItem ->
-                    val visible = !(resultItem.redundant || hasOnlyOneSet)
+                    val personCountVisible = !(resultItem.redundant || hasOnlyOneSet)
 
                     ResultItemViewState(
                         chipCounts = resultItem.chips.map {
@@ -61,8 +61,9 @@ class MainPresenterImpl(
                         },
                         personCountState = PersonCountState(
                             personCount = resultItem.personCount,
-                            visible = visible
-                        )
+                            visible = personCountVisible
+                        ),
+                        redundant = resultItem.redundant
                     )
                 }
 

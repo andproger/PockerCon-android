@@ -52,6 +52,8 @@ class CalcResultItemsAdapter(
 
                 itemView.groupPersonCount.visibility =
                     if (personCountState.visible) View.VISIBLE else View.GONE
+
+                itemView.labelRedundant.visibility = if (redundant) View.VISIBLE else View.GONE
             }
         }
 
@@ -75,7 +77,8 @@ class CalcResultItemsAdapter(
 
 class ResultItemViewState(
     val chipCounts: List<ChipCountViewState>,
-    val personCountState: PersonCountState
+    val personCountState: PersonCountState,
+    val redundant: Boolean
 )
 
 class ChipCountViewState(
