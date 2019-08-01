@@ -30,62 +30,10 @@ class CalculateChipSetsInteractorImpl(
                 val chipsToDiv = chips.without(chipsRedundant)
                     .apply { if (isEmpty()) error("") }
 
-                val (common, balanceToDiv) = chipsToDiv.div(personCount)
+                val (common, spec) = chipsToDiv.divForCommon(personCount)
                     .apply { if (first.isEmpty()) error("") }
 
-                val actionsToDiv: MutableMap<Int, MutableList<Chip>> = mutableMapOf()
-
-                if (balanceToDiv.isNotEmpty()) {
-                    balanceToDiv.toDesc()
-
-                    val bSum = balanceToDiv.sum()
-                    val oForOne = bSum / personCount
-
-                    for (i in 0..personCount) {
-                        for (c in balanceToDiv) {
-                            if (c.quantity == 0) continue
-                            if (c.number == oForOne) {
-                                actionsToDiv.insOrUpdate(i, c.copy(quantity = 1))
-                                balanceToDiv[balanceToDiv.indexOf(c)] = c.copy(quantity = c.quantity - 1)
-                                break
-                            }
-                            if (c.number > oForOne) {
-                                actionsToDiv.insOrUpdate(i, c.copy(quantity = 1))
-                                balanceToDiv[balanceToDiv.indexOf(c)] = c.copy(quantity = c.quantity - 1)
-
-                                var needReturnToDiv = c.number - oForOne
-
-                                val forReturn: MutableList<Chip> = mutableListOf()
-                                for (cR in common.desc()) {
-                                    if (cR.quantity == 0 || cR.number > needReturnToDiv) continue
-                                    if (cR.number == needReturnToDiv) {
-                                        forReturn.add(cR.copy(quantity = -1))
-                                        break
-                                    } else {
-                                        val q = needReturnToDiv / cR.number
-                                        forReturn.add(cR.copy(quantity = -q))
-                                        val newNeedReturn = needReturnToDiv - q * c.number
-                                        if (newNeedReturn == 0) {
-                                            break
-                                        } else {
-                                            needReturnToDiv = newNeedReturn
-                                        }
-                                    }
-                                }
-
-                                forReturn.forEach {
-                                    actionsToDiv.insOrUpdate(i, it)
-                                    val existQ = balanceToDiv.find { f -> f.number == it.number }?.quantity
-                                    existQ?.let { q ->
-                                        balanceToDiv[balanceToDiv.indexOf(it)] = it.copy(quantity = c.quantity - 1)
-                                    }
-                                }
-
-                                break
-                            }
-                        }
-                    }
-                }
+                val actionsForSpec = actionsToDivSpec(spec, personCount, common)
 
                 val items = listOf(
                     ResultItem(common, personCount, false),
@@ -99,6 +47,66 @@ class CalculateChipSetsInteractorImpl(
                 )
             }
         }
+    }
+
+    private fun actionsToDivSpec(
+        spec: List<Chip>,
+        persons: Int,
+        common: List<Chip>
+    ): Map<Int, MutableList<Chip>> {
+        if (spec.isEmpty()) return mutableMapOf()
+
+        val specToDiv = spec.toMutableList().apply { sortByDescending { it.number } }
+        val specForOne = specToDiv.sum() / persons
+
+        val actions: MutableMap<Int, MutableList<Chip>> = mutableMapOf()
+
+        for (i in 0..persons) {
+            for (c in specToDiv) {
+                if (c.quantity == 0) continue
+                if (c.number == specForOne) {
+                    actions.insOrUpdate(i, c.copy(quantity = 1))
+                    specToDiv[specToDiv.indexOf(c)] = c.copy(quantity = c.quantity - 1)
+                    break
+                }
+                if (c.number > specForOne) {
+                    actions.insOrUpdate(i, c.copy(quantity = 1))
+                    specToDiv[specToDiv.indexOf(c)] = c.copy(quantity = c.quantity - 1)
+
+                    var needReturnToDiv = c.number - specForOne
+
+                    val forReturn: MutableList<Chip> = mutableListOf()
+                    for (cR in common.desc()) {
+                        if (cR.quantity == 0 || cR.number > needReturnToDiv) continue
+                        if (cR.number == needReturnToDiv) {
+                            forReturn.add(cR.copy(quantity = -1))
+                            break
+                        } else {
+                            val q = needReturnToDiv / cR.number
+                            forReturn.add(cR.copy(quantity = -q))
+                            val newNeedReturn = needReturnToDiv - q * c.number
+                            if (newNeedReturn == 0) {
+                                break
+                            } else {
+                                needReturnToDiv = newNeedReturn
+                            }
+                        }
+                    }
+
+                    forReturn.forEach {
+                        actions.insOrUpdate(i, it)
+                        val existQ = specToDiv.find { f -> f.number == it.number }?.quantity
+                        existQ?.let { q ->
+                            specToDiv[specToDiv.indexOf(it)] = it.copy(quantity = c.quantity - 1)
+                        }
+                    }
+
+                    break
+                }
+            }
+        }
+
+        return actions
     }
 
     private fun calcRedundant(
@@ -143,8 +151,6 @@ class CalculateChipSetsInteractorImpl(
                                         ?: mutableListOf(c.copy(quantity = 1))*/
     private fun List<Chip>.desc() = sortedByDescending { it.number }
 
-    private fun MutableList<Chip>.toDesc() = sortByDescending { it.number }
-
     private fun List<Chip>.sum() = sumBy { it.number * it.quantity }
 
     private fun List<Chip>.min() = minBy { it.number }?.number ?: error("")
@@ -160,16 +166,16 @@ class CalculateChipSetsInteractorImpl(
     }
 }
 
-private fun List<Chip>.div(personCount: Int): Pair<List<Chip>, MutableList<Chip>> {
+private fun List<Chip>.divForCommon(personCount: Int): Pair<List<Chip>, List<Chip>> {
     val common: MutableList<Chip> = mutableListOf()
-    val balanceToDiv: MutableList<Chip> = mutableListOf()
+    val spec: MutableList<Chip> = mutableListOf()
 
     forEach { c ->
         val o = c.quantity / personCount
         if (o != 0) common.add(Chip(c.number, o))
         val b = c.quantity - o
-        if (b != 0) balanceToDiv.add(Chip(c.number, b))
+        if (b != 0) spec.add(Chip(c.number, b))
     }
 
-    return common to balanceToDiv
+    return common to spec
 }
