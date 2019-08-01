@@ -7,11 +7,17 @@ interface CalculateChipSetsInteractor {
     fun calculate(): Observable<CalcResult>
 }
 
-class CalcResult(
+sealed class CalcResult
+
+class SuccessCalcResult(
     val items: List<ResultItem>,
     val personCount: Int,
     val summary: Int
-)
+) : CalcResult()
+
+class ErrorCalcResult(
+    val msg: String
+) : CalcResult()
 
 class ResultItem(
     val chips: List<Chip>,
