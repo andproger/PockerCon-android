@@ -14,7 +14,8 @@ class CalculateChipSetsInteractorImpl(
     override fun calculate(): Observable<CalcResult> {
         return Observable.combineLatest(
             chipsRepository.getAllWithUpdates(),
-            personCountRepository.getWithUpdates(),
+            personCountRepository.getWithUpdates()
+                .map { if (it < 2) 2 else it },
             BiFunction { chips: List<Chip>, personCount: Int ->
                 chips to personCount
             }
@@ -34,11 +35,20 @@ class CalculateChipSetsInteractorImpl(
                     .apply { if (first.isEmpty()) error("") }
 
                 val actionsForSpec = actionsToDivSpec(spec, personCount, common)
+                    .map { it.value }
 
-                val items = listOf(
+                val d = actionsForSpec.asSequence().distinct()
+                    .map { a -> actionsForSpec.count { it == a } to a }.toList()
+
+                val items = mutableListOf(
                     ResultItem(common, personCount, false),
                     ResultItem(chipsRedundant, 0, true)
                 )
+
+                for (act in d) {
+                    val (persons, actions) = act
+                    items.add(ResultItem(actions, persons, false))
+                }
 
                 SuccessCalcResult(
                     items,
@@ -56,47 +66,48 @@ class CalculateChipSetsInteractorImpl(
     ): Map<Int, MutableList<Chip>> {
         if (spec.isEmpty()) return mutableMapOf()
 
-        val specToDiv = spec.toMutableList()
-            .apply { sortByDescending { it.number } }
+        val divTarget = spec.sum() / persons
 
-        val divTarget = specToDiv.sum() / persons
+        val specToDiv = spec.desc()
+            .associateBy { it.number }
+            .toMutableMap()
 
         val actions: MutableMap<Int, MutableList<Chip>> = mutableMapOf()
 
         val specActionsManager = SpecActionsManager(
             actions,
-            specToDiv.associateBy { it.number }.toMutableMap()
+            specToDiv
         )
 
-        for (personI in 0..persons) {
-            for (specI in 0 until specToDiv.size) {
-                val specChip = specToDiv[specI]
+        for (personI in 0 until persons) {
+            var divT = divTarget
+            for (chipEntry in specToDiv) {
+                val (num, specChip) = chipEntry
 
                 if (specChip.quantity == 0) continue
-                if (specChip.number == divTarget) {
-                    specActionsManager.giveOne(personI, specI)
+                if (num == divT) {
+                    specActionsManager.giveOne(personI, num)
                     break
                 }
-                if (specChip.number > divTarget) {
-                    specActionsManager.giveOne(personI, specI)
+                if (num > divT) {
+                    specActionsManager.giveOne(personI, num)
 
-                    var diff = specChip.number - divTarget
-                    val backToSpec: MutableList<Chip> = mutableListOf()
+                    var diff = num - divT
 
                     for (commonChip in common.desc()) {
                         if (commonChip.quantity == 0 || commonChip.number > diff) continue
                         if (commonChip.number == diff) {
-                            backToSpec.add(commonChip.copy(quantity = 1))
+                            specActionsManager.action(personI, commonChip.number, -1)
                             break
                         }
                         if (commonChip.number < diff) {
-                            var q = diff / commonChip.number
+                            val q = (diff / commonChip.number).let { q ->
+                                if (commonChip.quantity - q < 0) commonChip.quantity else q
+                            }
 
-                            if (commonChip.quantity - q < 0) q = commonChip.quantity
+                            specActionsManager.action(personI, commonChip.number, -q)
 
-                            backToSpec.add(commonChip.copy(quantity = q))
-
-                            val newDiff = diff - q * specChip.number
+                            val newDiff = diff - q * num
                             if (newDiff == 0) {
                                 break
                             } else {
@@ -105,49 +116,20 @@ class CalculateChipSetsInteractorImpl(
                         }
                     }
 
-                    for (backChipI in 0 until backToSpec.size) {
-                        val backChip = backToSpec[backChipI]
-
-                        actions.insOrUpdate(personI, backChip.copy(quantity = -backChip.quantity))
-
-                        val existSpecQ = specToDiv.find { f -> f.number == backChip.number }?.quantity
-
-                        if (existSpecQ != null) {
-                            val existSpecChipI = specToDiv.indexOfFirst { it.number == backChip.number }
-                            specToDiv[existSpecChipI] = backChip.copy(quantity = existSpecQ + backChip.quantity)
-                        } else {
-                            specToDiv.add(backChip)
-                            specToDiv.sortByDescending { it.number }
-                        }
-                    }
-
                     break
                 }
-                if (specChip.number < divTarget) {
-                    val backTo: MutableList<Chip> = mutableListOf()
+                if (num < divT) {
+                    val q = (divT / num).let { q ->
+                        if (specChip.quantity - q < 0) specChip.quantity else q
+                    }
 
-                    var q = divTarget / specChip.number
+                    specActionsManager.action(personI, specChip.number, q)
 
-                    if (specChip.quantity - q < 0) q = specChip.quantity
-
-                    actions.insOrUpdate(personI, specChip.copy(quantity = q))
-                    specToDiv[specI] = specChip.copy(quantity = specChip.quantity - q)
-
-                    val newDiff = divTarget - q * specChip.number
+                    val newDiff = divT - q * num
                     if (newDiff == 0) {
                         break
                     } else {
-                        for (sI in specI until specToDiv.size) {
-                            val cc = specToDiv[sI]
-                            if (cc.number == newDiff) {
-                                specToDiv[sI] = specChip.copy(quantity = specChip.quantity - 1)
-                                actions.insOrUpdate(personI, specChip.copy(quantity = 1))
-                                break
-                            }
-                            if (cc.number > newDiff) {
-
-                            }
-                        }
+                        divT = newDiff
                     }
                 }
             }
@@ -195,7 +177,7 @@ class CalculateChipSetsInteractorImpl(
         forEach { c ->
             val o = c.quantity / personCount
             if (o != 0) common.add(Chip(c.number, o))
-            val b = c.quantity - o
+            val b = c.quantity - o * personCount
             if (b != 0) spec.add(Chip(c.number, b))
         }
 
@@ -215,7 +197,7 @@ class CalculateChipSetsInteractorImpl(
 
         val chipsMap = associateBy { it.number }.toMutableMap()
         chipsRedundant.forEach { c ->
-            chipsMap[c.number] = c.copy(quantity = chipsMap[c.number]?.quantity ?: 0-c.quantity)
+            chipsMap[c.number] = c.copy(quantity = (chipsMap[c.number]?.quantity ?: 0) - c.quantity)
         }
         return chipsMap.toList().map { it.second }
     }
@@ -225,7 +207,7 @@ class CalculateChipSetsInteractorImpl(
         val spec: MutableMap<Int, Chip>
     ) {
         fun action(personI: Int, number: Int, q: Int) {
-            val chip = spec[number] ?: error("")
+            val chip = spec[number] ?: if (q < 0) Chip(number, 0) else error("")
             actions.insOrUpdate(personI, Chip(number, q))
             spec[number] = Chip(number, chip.quantity - q)
         }

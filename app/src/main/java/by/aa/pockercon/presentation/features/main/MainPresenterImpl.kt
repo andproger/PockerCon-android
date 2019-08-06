@@ -1,6 +1,8 @@
 package by.aa.pockercon.presentation.features.main
 
 import by.aa.pockercon.domain.interactors.calc.CalculateChipSetsInteractor
+import by.aa.pockercon.domain.interactors.calc.ErrorCalcResult
+import by.aa.pockercon.domain.interactors.calc.SuccessCalcResult
 import by.aa.pockercon.domain.interactors.count.UpdatePersonCountInteractor
 import by.aa.pockercon.presentation.features.base.BaseMvpPresenter
 import io.reactivex.Observable
@@ -50,26 +52,33 @@ class MainPresenterImpl(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { calcResult ->
-                val hasOnlyOneSet = calcResult.items.filter { !it.redundant }.size == 1
+                when (calcResult) {
+                    is SuccessCalcResult -> {
+                        val hasOnlyOneSet = calcResult.items.filter { !it.redundant }.size == 1
 
-                val items = calcResult.items.map { resultItem ->
-                    val personCountVisible = !(resultItem.redundant || hasOnlyOneSet)
+                        val items = calcResult.items.map { resultItem ->
+                            val personCountVisible = !(resultItem.redundant || hasOnlyOneSet)
 
-                    ResultItemViewState(
-                        chipCounts = resultItem.chips.map {
-                            ChipCountViewState(it.number, it.quantity)
-                        },
-                        personCountState = PersonCountState(
-                            personCount = resultItem.personCount,
-                            visible = personCountVisible
-                        ),
-                        redundant = resultItem.redundant
-                    )
+                            ResultItemViewState(
+                                chipCounts = resultItem.chips.map {
+                                    ChipCountViewState(it.number, it.quantity)
+                                },
+                                personCountState = PersonCountState(
+                                    personCount = resultItem.personCount,
+                                    visible = personCountVisible
+                                ),
+                                redundant = resultItem.redundant
+                            )
+                        }
+
+                        view?.renderSummary(calcResult.summary)
+                        view?.renderPersonCount(calcResult.personCount)
+                        view?.renderCalcResultItems(items)
+                    }
+                    is ErrorCalcResult -> {
+                        view?.renderPersonCount(99)
+                    }
                 }
-
-                view?.renderSummary(calcResult.summary)
-                view?.renderPersonCount(calcResult.personCount)
-                view?.renderCalcResultItems(items)
             }.let { d ->
                 compositeDisposable.add(d)
             }

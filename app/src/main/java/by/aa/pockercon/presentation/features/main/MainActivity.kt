@@ -63,11 +63,11 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
         val chipsDao = (application as App).getProvider().provideRoomDb().getChipsDao()
 
         val chipsRepository = ChipsRepositoryImpl(chipsDao)
-        val personCountRepository = PersonCountRepositoryImpl()
+        val personCountRepository = PersonCountRepositoryImpl(applicationContext)
 
         return MainPresenterImpl(
-                CalculateChipSetsInteractorImpl(chipsRepository, personCountRepository),
-                UpdatePersonCountInteractorImpl(personCountRepository)
+            CalculateChipSetsInteractorImpl(chipsRepository, personCountRepository),
+            UpdatePersonCountInteractorImpl(personCountRepository)
         )
     }
 
