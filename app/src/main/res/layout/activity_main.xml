@@ -6,41 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".presentation.features.main.MainActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="Conversion" />
-
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/imageViewPlus"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabMinus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/imageViewPerson"
-        app:layout_constraintStart_toEndOf="@id/textViewPersonCount"
-        app:srcCompat="@drawable/ic_plus_white" />
-
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/imageViewMinus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/imageViewPerson"
-        app:layout_constraintEnd_toStartOf="@id/imageViewPerson"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fabChips"
         app:srcCompat="@drawable/ic_minus_white" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/fabMinus"
+        app:layout_constraintTop_toTopOf="@id/fabChips"
+        app:srcCompat="@drawable/ic_plus_white" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewPersonCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:text="2"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/textViewSummary"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/fabPlus"
+        app:layout_constraintStart_toStartOf="@id/fabPlus" />
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageViewPerson"
@@ -56,17 +50,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/imageViewPerson"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="123456"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@id/fabChips"
         app:layout_constraintEnd_toStartOf="@id/fabChips"
-        app:layout_constraintTop_toTopOf="@id/fabChips" />
+        app:layout_constraintTop_toTopOf="@id/fabChips"
+        tools:text="123456" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabChips"

@@ -39,8 +39,6 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
     }
 
     override fun initViews() {
-        setSupportActionBar(toolbar)
-
         initListeners()
         initRecyclerView()
     }
@@ -54,9 +52,9 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
     private fun initListeners() {
         fabChips.setOnClickListener { presenter.onOpenChipsClicked() }
 
-        imageViewPlus.setOnClickListener { presenter.onPlusPersonClicked() }
+        fabPlus.setOnClickListener { presenter.onPlusPersonClicked() }
 
-        imageViewMinus.setOnClickListener { presenter.onMinusPersonClicked() }
+        fabMinus.setOnClickListener { presenter.onMinusPersonClicked() }
     }
 
     override fun createPresenter(): MainPresenter {
