@@ -10,7 +10,7 @@ interface CalculateChipSetsInteractor {
 sealed class CalcState
 
 class SuccessCalcState(
-    val items: List<ResultItem>,
+    val items: List<ResultItems>,
     val personCount: Int,
     val summary: Int
 ) : CalcState()
@@ -21,8 +21,15 @@ class ErrorCalcState(
     val msg: String
 ) : CalcState()
 
-class ResultItem(
-    val chips: List<Chip>,
-    val personCount: Int,
-    val redundant: Boolean
+sealed class ResultItems(
+    val chips: List<Chip>
 )
+
+class DivItems(
+    chips: List<Chip>,
+    val personCount: Int
+) : ResultItems(chips)
+
+class Redundants(
+    chips: List<Chip>
+) : ResultItems(chips)

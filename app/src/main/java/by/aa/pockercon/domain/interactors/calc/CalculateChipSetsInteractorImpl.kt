@@ -42,14 +42,19 @@ class CalculateChipSetsInteractorImpl(
                     val d = actionsForSpec.asSequence().distinct()
                         .map { a -> actionsForSpec.count { it == a } to a }.toList()
 
-                    val items = mutableListOf(
-                        ResultItem(common, personCount, false),
-                        ResultItem(chipsRedundant, 0, true)
+                    val items = mutableListOf<ResultItems>(
+                        DivItems(common, personCount)
                     )
+
+                    if (redundant > 0) {
+                        items.add(
+                            Redundants(chipsRedundant)
+                        )
+                    }
 
                     for (act in d) {
                         val (persons, actions) = act
-                        items.add(ResultItem(actions, persons, false))
+                        items.add(DivItems(actions, persons))
                     }
 
                     SuccessCalcState(

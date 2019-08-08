@@ -1,9 +1,6 @@
 package by.aa.pockercon.presentation.features.main
 
-import by.aa.pockercon.domain.interactors.calc.CalculateChipSetsInteractor
-import by.aa.pockercon.domain.interactors.calc.ErrorCalcState
-import by.aa.pockercon.domain.interactors.calc.ProgressState
-import by.aa.pockercon.domain.interactors.calc.SuccessCalcState
+import by.aa.pockercon.domain.interactors.calc.*
 import by.aa.pockercon.domain.interactors.count.GetPersonCountInteractor
 import by.aa.pockercon.domain.interactors.count.UpdatePersonCountInteractor
 import by.aa.pockercon.presentation.features.base.BaseMvpPresenter
@@ -60,21 +57,33 @@ class MainPresenterImpl(
             .subscribe { calcResult ->
                 when (calcResult) {
                     is SuccessCalcState -> {
-                        val hasOnlyOneSet = calcResult.items.filter { !it.redundant }.size == 1
+                        val hasOnlyOneSet = calcResult.items.count { it is DivItems } == 1
 
                         val items = calcResult.items.map { resultItem ->
-                            val personCountVisible = !(resultItem.redundant || hasOnlyOneSet)
+                            val personCountVisible = !(resultItem is Redundants || hasOnlyOneSet)
 
-                            ResultItemViewState(
-                                chipCounts = resultItem.chips.map {
-                                    ChipCountViewState(it.number, it.quantity)
-                                },
-                                personCountState = PersonCountState(
-                                    personCount = resultItem.personCount,
-                                    visible = personCountVisible
-                                ),
-                                redundant = resultItem.redundant
-                            )
+                            when (resultItem) {
+                                is DivItems -> ResultItemViewState(
+                                    chipCounts = resultItem.chips.map {
+                                        ChipCountViewState(it.number, it.quantity)
+                                    },
+                                    personCountState = PersonCountState(
+                                        personCount = resultItem.personCount,
+                                        visible = personCountVisible
+                                    ),
+                                    redundant = false
+                                )
+                                is Redundants -> ResultItemViewState(
+                                    chipCounts = resultItem.chips.map {
+                                        ChipCountViewState(it.number, it.quantity)
+                                    },
+                                    personCountState = PersonCountState(
+                                        personCount = 0,
+                                        visible = personCountVisible
+                                    ),
+                                    redundant = true
+                                )
+                            }
                         }
 
                         view?.showProgress(false)
