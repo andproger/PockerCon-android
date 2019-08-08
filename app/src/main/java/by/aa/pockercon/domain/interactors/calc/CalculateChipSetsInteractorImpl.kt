@@ -110,7 +110,7 @@ class CalculateChipSetsInteractorImpl(
 
                             specActionsManager.action(personI, commonChip.number, -q)
 
-                            val newDiff = diff - q * num
+                            val newDiff = diff - q * commonChip.number
                             if (newDiff == 0) {
                                 break
                             } else {
