@@ -11,7 +11,7 @@ class CalculateChipSetsInteractorImpl(
     private val personCountRepository: PersonCountRepository
 ) : CalculateChipSetsInteractor {
 
-    override fun calculate(): Observable<CalcResult> {
+    override fun calculate(): Observable<CalcState> {
         return Observable.combineLatest(
             chipsRepository.getAllWithUpdates(),
             personCountRepository.getWithUpdates()
@@ -20,42 +20,45 @@ class CalculateChipSetsInteractorImpl(
                 chips to personCount
             }
         ).switchMap { chipsAndCount ->
-            Observable.fromCallable {
-                val (chips, personCount) = chipsAndCount
+            Observable.concat<CalcState>(
+                Observable.just(ProgressState),
+                Observable.fromCallable {
+                    val (chips, personCount) = chipsAndCount
 
-                if (!valid(chips, personCount)) error("")
+                    if (!valid(chips, personCount)) return@fromCallable ErrorCalcState("not valid")
 
-                val totalSum = chips.sum()
-                val (redundant, chipsRedundant) = calcRedundant(totalSum, personCount, chips)
+                    val totalSum = chips.sum()
+                    val (redundant, chipsRedundant) = calcRedundant(totalSum, personCount, chips)
 
-                val chipsToDiv = chips.without(chipsRedundant)
-                    .apply { if (isEmpty()) error("") }
+                    val chipsToDiv = chips.without(chipsRedundant)
+                        .apply { if (isEmpty()) return@fromCallable ErrorCalcState("not valid") }
 
-                val (common, spec) = chipsToDiv.divForCommon(personCount)
-                    .apply { if (first.isEmpty()) error("") }
+                    val (common, spec) = chipsToDiv.divForCommon(personCount)
+                        .apply { if (first.isEmpty()) return@fromCallable ErrorCalcState("not valid") }
 
-                val actionsForSpec = actionsToDivSpec(spec, personCount, common)
-                    .map { it.value }
+                    val actionsForSpec = actionsToDivSpec(spec, personCount, common)
+                        .map { it.value }
 
-                val d = actionsForSpec.asSequence().distinct()
-                    .map { a -> actionsForSpec.count { it == a } to a }.toList()
+                    val d = actionsForSpec.asSequence().distinct()
+                        .map { a -> actionsForSpec.count { it == a } to a }.toList()
 
-                val items = mutableListOf(
-                    ResultItem(common, personCount, false),
-                    ResultItem(chipsRedundant, 0, true)
-                )
+                    val items = mutableListOf(
+                        ResultItem(common, personCount, false),
+                        ResultItem(chipsRedundant, 0, true)
+                    )
 
-                for (act in d) {
-                    val (persons, actions) = act
-                    items.add(ResultItem(actions, persons, false))
+                    for (act in d) {
+                        val (persons, actions) = act
+                        items.add(ResultItem(actions, persons, false))
+                    }
+
+                    SuccessCalcState(
+                        items,
+                        personCount,
+                        totalSum
+                    )
                 }
-
-                SuccessCalcResult(
-                    items,
-                    personCount,
-                    totalSum
-                )
-            }
+            )
         }
     }
 

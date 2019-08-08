@@ -10,4 +10,6 @@ interface MainView : MvpView {
     fun renderPersonCount(personCount: Int)
 
     fun renderSummary(summary: Int)
+
+    fun showProgress(show: Boolean)
 }

@@ -4,20 +4,22 @@ import by.aa.pockercon.domain.entity.Chip
 import io.reactivex.Observable
 
 interface CalculateChipSetsInteractor {
-    fun calculate(): Observable<CalcResult>
+    fun calculate(): Observable<CalcState>
 }
 
-sealed class CalcResult
+sealed class CalcState
 
-class SuccessCalcResult(
+class SuccessCalcState(
     val items: List<ResultItem>,
     val personCount: Int,
     val summary: Int
-) : CalcResult()
+) : CalcState()
 
-class ErrorCalcResult(
+object ProgressState : CalcState()
+
+class ErrorCalcState(
     val msg: String
-) : CalcResult()
+) : CalcState()
 
 class ResultItem(
     val chips: List<Chip>,

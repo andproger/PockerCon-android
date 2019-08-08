@@ -2,10 +2,12 @@ package by.aa.pockercon.presentation.features.main
 
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import by.aa.pockercon.R
 import by.aa.pockercon.data.cache.repositories.ChipsRepositoryImpl
 import by.aa.pockercon.data.cache.repositories.PersonCountRepositoryImpl
 import by.aa.pockercon.domain.interactors.calc.CalculateChipSetsInteractorImpl
+import by.aa.pockercon.domain.interactors.count.GetPersonCountInteractorImpl
 import by.aa.pockercon.domain.interactors.count.UpdatePersonCountInteractorImpl
 import by.aa.pockercon.presentation.app.App
 import by.aa.pockercon.presentation.features.base.BaseMvpActivity
@@ -34,6 +36,11 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
 
             override fun renderSummary(summary: Int) {
                 textViewSummary.text = summary.toString()
+            }
+
+            override fun showProgress(show: Boolean) {
+                progressBar.visibility = if (show) View.VISIBLE else View.GONE
+                recyclerView.visibility = if (!show) View.VISIBLE else View.INVISIBLE
             }
         }
     }
@@ -65,7 +72,8 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
 
         return MainPresenterImpl(
             CalculateChipSetsInteractorImpl(chipsRepository, personCountRepository),
-            UpdatePersonCountInteractorImpl(personCountRepository)
+            UpdatePersonCountInteractorImpl(personCountRepository),
+            GetPersonCountInteractorImpl(personCountRepository)
         )
     }
 

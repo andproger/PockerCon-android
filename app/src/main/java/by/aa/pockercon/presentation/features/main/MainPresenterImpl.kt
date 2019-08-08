@@ -1,8 +1,10 @@
 package by.aa.pockercon.presentation.features.main
 
 import by.aa.pockercon.domain.interactors.calc.CalculateChipSetsInteractor
-import by.aa.pockercon.domain.interactors.calc.ErrorCalcResult
-import by.aa.pockercon.domain.interactors.calc.SuccessCalcResult
+import by.aa.pockercon.domain.interactors.calc.ErrorCalcState
+import by.aa.pockercon.domain.interactors.calc.ProgressState
+import by.aa.pockercon.domain.interactors.calc.SuccessCalcState
+import by.aa.pockercon.domain.interactors.count.GetPersonCountInteractor
 import by.aa.pockercon.domain.interactors.count.UpdatePersonCountInteractor
 import by.aa.pockercon.presentation.features.base.BaseMvpPresenter
 import io.reactivex.Observable
@@ -15,10 +17,13 @@ import java.io.Serializable
 
 class MainPresenterImpl(
     private val calculateChipSetsInteractor: CalculateChipSetsInteractor,
-    private val updatePersonCountInteractor: UpdatePersonCountInteractor
+    private val updatePersonCountInteractor: UpdatePersonCountInteractor,
+    private val getPersonCountInteractor: GetPersonCountInteractor
 ) : BaseMvpPresenter<MainView>(), MainPresenter {
 
-    private val personsIncSubject = BehaviorSubject.create<IncOperation>()
+    private val editModel = MainEditModel.DEFAULT
+
+    private val personsIncSubject = BehaviorSubject.create<Int>()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -27,6 +32,7 @@ class MainPresenterImpl(
 
         subscribeToCalculation()
         subscribeToChangePersonCount()
+        subscribeToPersonCountUpdates()
     }
 
     override fun destroy() {
@@ -40,11 +46,11 @@ class MainPresenterImpl(
     }
 
     override fun onPlusPersonClicked() {
-        personsIncSubject.onNext(IncOperation.PLUS)
+        personsIncSubject.onNext(editModel.personCount.get() + 1)
     }
 
     override fun onMinusPersonClicked() {
-        personsIncSubject.onNext(IncOperation.MINUS)
+        personsIncSubject.onNext(editModel.personCount.get() - 1)
     }
 
     private fun subscribeToCalculation() {
@@ -53,7 +59,7 @@ class MainPresenterImpl(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { calcResult ->
                 when (calcResult) {
-                    is SuccessCalcResult -> {
+                    is SuccessCalcState -> {
                         val hasOnlyOneSet = calcResult.items.filter { !it.redundant }.size == 1
 
                         val items = calcResult.items.map { resultItem ->
@@ -71,12 +77,16 @@ class MainPresenterImpl(
                             )
                         }
 
+                        view?.showProgress(false)
                         view?.renderSummary(calcResult.summary)
-                        view?.renderPersonCount(calcResult.personCount)
                         view?.renderCalcResultItems(items)
                     }
-                    is ErrorCalcResult -> {
-                        view?.renderPersonCount(99)
+                    is ErrorCalcState -> {
+                        view?.renderPersonCount(999)//TODO error message
+                        view?.showProgress(false)
+                    }
+                    is ProgressState -> {
+                        view?.showProgress(true)
                     }
                 }
             }.let { d ->
@@ -85,27 +95,41 @@ class MainPresenterImpl(
     }
 
     private fun subscribeToChangePersonCount() {
-        personsIncSubject.switchMap { incOperation ->
-            Observable.fromCallable {
-                when (incOperation) {
-                    IncOperation.PLUS -> {
-                        updatePersonCountInteractor.plus()
-                    }
-                    IncOperation.MINUS -> {
-                        updatePersonCountInteractor.minus()
-                    }
+        personsIncSubject
+            .filter { it in 2..29 }
+            .doOnNext { personCount ->
+                editModel.personCount.input(personCount)
+                renderCount()
+            }.switchMap { personCount ->
+                Observable.fromCallable {
+                    updatePersonCountInteractor.update(personCount)
+                    personCount
                 }
-            }
-        }.subscribeOn(Schedulers.io())
+            }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
+            .subscribe { personCount ->
+                editModel.personCount.complete(personCount)
+            }
             .let { d ->
                 compositeDisposable.add(d)
             }
     }
 
-    enum class IncOperation {
-        PLUS,
-        MINUS
+    private fun subscribeToPersonCountUpdates() {
+        getPersonCountInteractor.get()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { count ->
+                editModel.personCount.render(count) {
+                    renderCount()
+                }
+            }
+            .let { d ->
+                compositeDisposable.add(d)
+            }
+    }
+
+    private fun renderCount() {
+        view?.renderPersonCount(editModel.personCount.get())
     }
 }

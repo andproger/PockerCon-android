@@ -6,19 +6,9 @@ class UpdatePersonCountInteractorImpl(
     private val personCountRepository: PersonCountRepository
 ) : UpdatePersonCountInteractor {
 
-    override fun plus() {
-        val count = personCountRepository.get().let {
-            if (it < 2) 2 else it
-        }
-        if (count < 30) {
-            personCountRepository.save(count + 1)
-        }
-    }
-
-    override fun minus() {
-        val count = personCountRepository.get()
-        if (count > 2) {
-            personCountRepository.save(count - 1)
+    override fun update(personCount: Int) {
+        if (personCount in 2..29) {
+            personCountRepository.save(personCount)
         }
     }
 }
