@@ -28,8 +28,8 @@ class CachedInputModel<T>(
     }
 
     fun render(value: T, onChanged: () -> Unit = {}) {
-        if (!updated || this.value == value) {
-            val equal = value == value
+        val equal = this.value == value
+        if (!updated || equal) {
             this.value = value
             updated = false
             if (!equal) {

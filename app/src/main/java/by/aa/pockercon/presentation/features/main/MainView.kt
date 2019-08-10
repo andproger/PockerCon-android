@@ -12,4 +12,15 @@ interface MainView : MvpView {
     fun renderSummary(summary: Int)
 
     fun showProgress(show: Boolean)
+
+    fun showCalcError(calcError: CalcError?)
+}
+
+sealed class CalcError {
+    class Message(val text: String) : CalcError()
+
+    class NoChips(
+        val chipsSum: Int,
+        val personCount: Int
+    ) : CalcError()
 }

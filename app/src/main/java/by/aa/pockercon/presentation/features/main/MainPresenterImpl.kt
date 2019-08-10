@@ -89,10 +89,13 @@ class MainPresenterImpl(
                         view?.showProgress(false)
                         view?.renderSummary(calcResult.summary)
                         view?.renderCalcResultItems(items)
+                        view?.showCalcError(null)
                     }
                     is ErrorCalcState -> {
-                        view?.renderPersonCount(999)//TODO error message
                         view?.showProgress(false)
+                        view?.showCalcError(
+                            CalcError.NoChips(calcResult.summary, calcResult.personCount)
+                        )
                     }
                     is ProgressState -> {
                         view?.showProgress(true)

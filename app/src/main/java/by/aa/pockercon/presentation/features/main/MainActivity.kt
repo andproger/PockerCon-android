@@ -39,8 +39,22 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
             }
 
             override fun showProgress(show: Boolean) {
+                textViewNoChips.visibility = View.GONE
                 progressBar.visibility = if (show) View.VISIBLE else View.GONE
                 recyclerView.visibility = if (!show) View.VISIBLE else View.INVISIBLE
+            }
+
+            override fun showCalcError(calcError: CalcError?) {
+                val showError = calcError != null
+                recyclerView.visibility = if (showError) View.INVISIBLE else View.VISIBLE
+                textViewNoChips.visibility = if (showError) View.VISIBLE else View.GONE
+
+                if (calcError == null) return
+
+                textViewNoChips.text = when (calcError) {
+                    is CalcError.Message -> calcError.text
+                    is CalcError.NoChips -> calcError.toMessage()
+                }
             }
         }
     }
@@ -79,4 +93,15 @@ class MainActivity : BaseMvpActivity<MainView, MainPresenter>() {
 
     private val adapter: CalcResultItemsAdapter
         get() = recyclerView.adapter as CalcResultItemsAdapter
+
+    private fun CalcError.NoChips.toMessage(): String {
+        val sum = chipsSum
+        val count = personCount
+
+        val noChips = getString(R.string.no_chips_for_div)
+        val sumLabel = getString(R.string.sum_of_chips)
+        val countLabel = getString(R.string.count_of_persons)
+
+        return "$noChips\n$sumLabel $sum\n$countLabel $count"
+    }
 }

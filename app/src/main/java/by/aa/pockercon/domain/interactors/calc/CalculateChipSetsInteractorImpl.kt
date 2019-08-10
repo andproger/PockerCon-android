@@ -25,16 +25,26 @@ class CalculateChipSetsInteractorImpl(
                 Observable.fromCallable {
                     val (chips, personCount) = chipsAndCount
 
-                    if (!valid(chips, personCount)) return@fromCallable ErrorCalcState("not valid")
+                    if (!valid(chips, personCount)) {
+                        return@fromCallable noChipsError(personCount, chips.sum())
+                    }
 
                     val totalSum = chips.sum()
                     val (redundant, chipsRedundant) = calcRedundant(totalSum, personCount, chips)
 
                     val chipsToDiv = chips.without(chipsRedundant)
-                        .apply { if (isEmpty()) return@fromCallable ErrorCalcState("not valid") }
+                        .apply {
+                            if (isEmpty()) {
+                                return@fromCallable noChipsError(personCount, totalSum)
+                            }
+                        }
 
                     val (common, spec) = chipsToDiv.divForCommon(personCount)
-                        .apply { if (first.isEmpty()) return@fromCallable ErrorCalcState("not valid") }
+                        .apply {
+                            if (first.isEmpty()) {
+                                return@fromCallable noChipsError(personCount, totalSum)
+                            }
+                        }
 
                     val actionsForSpec = actionsToDivSpec(spec, personCount, common)
                         .map { it.value }
@@ -67,6 +77,8 @@ class CalculateChipSetsInteractorImpl(
         }
     }
 
+    private fun noChipsError(personCount: Int, summary: Int) = ErrorCalcState(CalcError.NO_CHIPS, personCount, summary)
+
     private fun actionsToDivSpec(
         spec: List<Chip>,
         persons: Int,
@@ -89,7 +101,14 @@ class CalculateChipSetsInteractorImpl(
 
         for (personI in 0 until persons) {
             var divT = divTarget
+
             for (chipEntry in specToDiv) {
+                val targetChip = specToDiv[divT]
+                if (targetChip != null && targetChip.quantity > 0) {
+                    specActionsManager.giveOne(personI, targetChip.number)
+                    break
+                }
+
                 val (num, specChip) = chipEntry
 
                 if (specChip.quantity == 0) continue

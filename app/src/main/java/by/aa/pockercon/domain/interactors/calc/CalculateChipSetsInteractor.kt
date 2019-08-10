@@ -18,8 +18,14 @@ class SuccessCalcState(
 object ProgressState : CalcState()
 
 class ErrorCalcState(
-    val msg: String
+    val type: CalcError,
+    val personCount: Int,
+    val summary: Int
 ) : CalcState()
+
+enum class CalcError {
+    NO_CHIPS
+}
 
 sealed class ResultItems(
     val chips: List<Chip>
