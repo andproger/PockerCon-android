@@ -63,6 +63,16 @@ class MainPresenterImpl(
                             val personCountVisible = !(resultItem is Redundants || hasOnlyOneSet)
 
                             when (resultItem) {
+                                is CommonItems -> ResultItemViewState(
+                                    chipCounts = resultItem.chips.map {
+                                        ChipCountViewState(it.number, it.quantity)
+                                    },
+                                    personCountState = PersonCountState(
+                                        personCount = resultItem.personCount,
+                                        visible = personCountVisible
+                                    ),
+                                    itemType = ItemType.COMMON
+                                )
                                 is DivItems -> ResultItemViewState(
                                     chipCounts = resultItem.chips.map {
                                         ChipCountViewState(it.number, it.quantity)
@@ -71,7 +81,7 @@ class MainPresenterImpl(
                                         personCount = resultItem.personCount,
                                         visible = personCountVisible
                                     ),
-                                    redundant = false
+                                    itemType = ItemType.SPEC_DIV
                                 )
                                 is Redundants -> ResultItemViewState(
                                     chipCounts = resultItem.chips.map {
@@ -81,7 +91,7 @@ class MainPresenterImpl(
                                         personCount = 0,
                                         visible = personCountVisible
                                     ),
-                                    redundant = true
+                                    itemType = ItemType.REDUNDANT
                                 )
                             }
                         }

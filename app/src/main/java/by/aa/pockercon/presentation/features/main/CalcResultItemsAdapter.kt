@@ -1,6 +1,7 @@
 package by.aa.pockercon.presentation.features.main
 
 import android.content.Context
+import android.support.annotation.StringRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -48,12 +49,26 @@ class CalcResultItemsAdapter(
         private fun updateUI() {
             model?.apply {
                 renderChipCounts(chipCounts)
-                itemView.textViewPersonCount.text = personCountState.personCount.toString()
 
-                itemView.groupPersonCount.visibility =
-                    if (personCountState.visible) View.VISIBLE else View.GONE
+                itemView.groupPersonCount.visibility = if (personCountState.visible) View.VISIBLE else View.GONE
 
-                itemView.labelRedundant.visibility = if (redundant) View.VISIBLE else View.GONE
+                val personCount = personCountState.personCount
+
+                when (itemType) {
+                    ItemType.COMMON -> {
+                        itemView.labelRedundant.visibility = View.GONE
+
+                        val personCountText = "$personCount ${getString(R.string.for_all)}"
+                        itemView.textViewPersonCount.text = personCountText
+                    }
+                    ItemType.REDUNDANT -> {
+                        itemView.labelRedundant.visibility = View.VISIBLE
+                    }
+                    ItemType.SPEC_DIV -> {
+                        itemView.labelRedundant.visibility = View.GONE
+                        itemView.textViewPersonCount.text = "$personCount"
+                    }
+                }
             }
         }
 
@@ -72,13 +87,15 @@ class CalcResultItemsAdapter(
                 grid.addView(countView)
             }
         }
+
+        fun getString(@StringRes resId: Int) = itemView.context.getString(resId)
     }
 }
 
 class ResultItemViewState(
     val chipCounts: List<ChipCountViewState>,
     val personCountState: PersonCountState,
-    val redundant: Boolean
+    val itemType: ItemType
 )
 
 class ChipCountViewState(
@@ -90,3 +107,9 @@ class PersonCountState(
     val personCount: Int,
     val visible: Boolean
 )
+
+enum class ItemType {
+    COMMON,
+    REDUNDANT,
+    SPEC_DIV
+}

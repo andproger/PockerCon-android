@@ -31,6 +31,11 @@ sealed class ResultItems(
     val chips: List<Chip>
 )
 
+class CommonItems(
+    chips: List<Chip>,
+    val personCount: Int
+) : ResultItems(chips)
+
 class DivItems(
     chips: List<Chip>,
     val personCount: Int

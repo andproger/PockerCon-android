@@ -53,7 +53,7 @@ class CalculateChipSetsInteractorImpl(
                         .map { a -> actionsForSpec.count { it == a } to a }.toList()
 
                     val items = mutableListOf<ResultItems>(
-                        DivItems(common, personCount)
+                        CommonItems(common, personCount)
                     )
 
                     if (redundant > 0) {
