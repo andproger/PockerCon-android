@@ -9,5 +9,6 @@ class GetPersonCountInteractorImpl(
 
     override fun get(): Observable<Int> {
         return personCountRepository.getWithUpdates()
+            .map { if (it in 2..29) it else 2 }
     }
 }
